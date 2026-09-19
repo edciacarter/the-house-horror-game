@@ -1,1208 +1,2176 @@
+// ================================
+// THE HOUSE
+// GAME SYSTEM
+// ================================
+
+const gameState = {
+
+    health: 100,
+
+    sanity: 100,
+
+    battery: 100,
+
+    clues: 0,
+
+    inventory: []
+
+};
+
+
+// ================================
+// UPDATE HUD
+// ================================
+
+function updateHUD() {
+
+    document.getElementById("health").textContent =
+        gameState.health;
+
+    document.getElementById("sanity").textContent =
+        gameState.sanity;
+
+    document.getElementById("battery").textContent =
+        gameState.battery + "%";
+
+    document.getElementById("clues").textContent =
+        gameState.clues;
+
+
+    const inventoryElement =
+        document.getElementById("inventory");
+
+
+    if (gameState.inventory.length === 0) {
+
+        inventoryElement.textContent = "Empty";
+
+    } else {
+
+        inventoryElement.textContent =
+            gameState.inventory.join(" • ");
+
+    }
+
+}
+
+
+// ================================
+// CHANGE GAME STATS
+// ================================
+
+function changeHealth(amount) {
+
+    gameState.health += amount;
+
+    if (gameState.health > 100) {
+        gameState.health = 100;
+    }
+
+    if (gameState.health <= 0) {
+
+        gameState.health = 0;
+
+        showDeath(
+            "YOUR BODY COULDN'T TAKE ANY MORE."
+        );
+
+        return false;
+    }
+
+    updateHUD();
+
+    return true;
+}
+
+
+function changeSanity(amount) {
+
+    gameState.sanity += amount;
+
+    if (gameState.sanity > 100) {
+        gameState.sanity = 100;
+    }
+
+    if (gameState.sanity <= 0) {
+
+        gameState.sanity = 0;
+
+        showDeath(
+            "YOU LOST YOUR MIND BEFORE YOU COULD ESCAPE."
+        );
+
+        return false;
+    }
+
+    updateHUD();
+
+    return true;
+}
+
+
+function useBattery(amount) {
+
+    gameState.battery -= amount;
+
+    if (gameState.battery < 0) {
+        gameState.battery = 0;
+    }
+
+    updateHUD();
+
+}
+
+
+function findClue() {
+
+    gameState.clues++;
+
+    updateHUD();
+
+}
+
+
+function addItem(item) {
+
+    if (!gameState.inventory.includes(item)) {
+
+        gameState.inventory.push(item);
+
+        updateHUD();
+
+    }
+
+}
+
+
+// ================================
+// DEATH
+// ================================
+
+function showDeath(message) {
+
+    document.getElementById("story").innerHTML =
+
+        `<div class="death">
+            YOU DIED
+        </div>
+
+        <p>${message}</p>
+
+        <button onclick="location.reload()">
+            TRY AGAIN
+        </button>`;
+
+    document.getElementById("choices").innerHTML = "";
+
+}
+
+
+// ================================
+// STORY SYSTEM
+// ================================
+
 const scenes = {
 
     start: {
+
         text: `
-            You wake up in the back seat of your car.
 
-            <br><br>
+        You wake up in the back seat of your car.
 
-            It's 2:13 AM.
+        The first thing you notice is the cold.
 
-            <br><br>
+        The second thing you notice is the silence.
 
-            You don't remember falling asleep.
+        Your phone reads <strong>2:13 AM.</strong>
 
-            <br><br>
+        Outside the windows stands an enormous abandoned house.
 
-            Outside your window is an enormous abandoned house.
+        You don't remember driving here.
 
-            <br><br>
+        You don't remember leaving home.
 
-            Your phone has one new message:
+        Then your phone vibrates.
 
-            <br><br>
+        <br><br>
 
-            <strong>"DON'T GO INSIDE."</strong>
+        <em>
+        DON'T GO INSIDE.
+        </em>
 
-            <br><br>
+        <br><br>
 
-            Then another message appears.
+        Another message appears.
 
-            <br><br>
+        <br><br>
 
-            <strong>"PLEASE. IT KNOWS YOU'RE HERE."</strong>
+        <em>
+        PLEASE. IT KNOWS YOU'RE HERE.
+        </em>
 
-            <br><br>
-
-            What do you do?
         `,
 
         choices: [
+
             {
-                text: "A. Get out of the car and approach the house.",
-                next: "frontDoor"
+                text: "A. Call someone",
+
+                action: () => {
+
+                    changeSanity(-5);
+
+                    return "callSomeone";
+
+                }
+
             },
 
             {
-                text: "B. Stay in the car and call someone.",
-                next: "callSomeone"
+                text: "B. Get out of the car",
+
+                action: () => {
+
+                    useBattery(5);
+
+                    return "frontDoor";
+
+                }
+
             }
+
         ]
+
     },
 
 
     callSomeone: {
+
         text: `
-            You lock the doors.
 
-            <br><br>
+        You press CALL.
 
-            You call your best friend.
+        <br><br>
 
-            <br><br>
+        One ring.
 
-            The phone rings.
+        <br><br>
 
-            <br><br>
+        Two.
 
-            Once.
+        <br><br>
 
-            <br>
+        Three.
 
-            Twice.
+        <br><br>
 
-            <br>
+        Someone answers.
 
-            Three times.
+        <br><br>
 
-            <br><br>
+        You don't hear a voice.
 
-            Someone answers.
+        <br><br>
 
-            <br><br>
+        You hear breathing.
 
-            You hear breathing.
+        <br><br>
 
-            <br><br>
+        Then a whisper:
 
-            "Hello?"
+        <br><br>
 
-            <br><br>
+        <strong>
+        "You're already inside."
+        </strong>
 
-            It's your friend's voice.
+        <br><br>
 
-            <br><br>
+        The call ends.
 
-            But your friend died three years ago.
         `,
 
         choices: [
+
             {
-                text: "A. Ask who is calling.",
-                next: "voice"
+                text: "A. Get out of the car",
+
+                action: () => {
+
+                    changeSanity(-10);
+
+                    return "frontDoor";
+
+                }
+
             },
 
             {
-                text: "B. Hang up immediately.",
-                next: "hangUp"
+                text: "B. Stay in the car",
+
+                action: () => {
+
+                    changeSanity(-20);
+
+                    return "car";
+
+                }
+
             }
+
         ]
-    },
 
-
-    voice: {
-        text: `
-            "You shouldn't have come here."
-
-            <br><br>
-
-            You stare at the house.
-
-            <br><br>
-
-            A light turns on in an upstairs window.
-
-            <br><br>
-
-            "It remembers you."
-
-            <br><br>
-
-            The call suddenly ends.
-
-            <br><br>
-
-            Your car won't start.
-        `,
-
-        choices: [
-            {
-                text: "A. Get out and go to the house.",
-                next: "frontDoor"
-            },
-
-            {
-                text: "B. Try the car again.",
-                next: "car"
-            }
-        ]
     },
 
 
     car: {
+
         text: `
-            You turn the key.
 
-            <br><br>
+        You lock every door.
 
-            Nothing.
+        <br><br>
 
-            <br><br>
+        Nothing moves outside.
 
-            You try again.
+        <br><br>
 
-            <br><br>
+        You wait.
 
-            Nothing.
+        <br><br>
 
-            <br><br>
+        Five minutes.
 
-            Then you hear something tapping on your window.
+        <br><br>
 
-            <br><br>
+        Ten.
 
-            <strong>Tap.</strong>
+        <br><br>
 
-            <br>
+        Then something slowly presses its face against
+        the driver's window.
 
-            <strong>Tap.</strong>
+        <br><br>
 
-            <br>
+        You freeze.
 
-            <strong>Tap.</strong>
-
-            <br><br>
-
-            You slowly look toward the window.
-
-            <br><br>
-
-            You see a handprint.
-
-            <br><br>
-
-            From the inside.
         `,
 
         choices: [
+
             {
-                text: "A. Get out of the car.",
-                next: "frontDoor"
+                text: "A. Start the car",
+
+                action: () => {
+
+                    return "carEscape";
+
+                }
+
             },
 
             {
-                text: "B. Stay completely still.",
-                next: "carDeath"
+                text: "B. Look directly at it",
+
+                action: () => {
+
+                    changeSanity(-35);
+
+                    return "carFace";
+
+                }
+
             }
+
         ]
+
     },
 
 
-    carDeath: {
+    carEscape: {
+
         text: `
-            You don't move.
 
-            <br><br>
+        You turn the key.
 
-            The tapping stops.
+        <br><br>
 
-            <br><br>
+        The engine starts.
 
-            Silence.
+        <br><br>
 
-            <br><br>
+        You slam your foot onto the accelerator.
 
-            Then something whispers directly beside your ear:
+        <br><br>
 
-            <br><br>
+        The house disappears behind you.
 
-            <strong>"Found you."</strong>
+        <br><br>
 
-            <br><br>
+        For a moment, you think you're safe.
 
-            <span class="death">YOU DIED.</span>
+        <br><br>
+
+        Then your phone rings.
+
+        <br><br>
+
+        The caller ID says:
+
+        <br><br>
+
+        <strong>YOUR OWN NUMBER</strong>
+
         `,
 
         choices: [
+
             {
-                text: "PLAY AGAIN",
-                next: "start"
-            }
-        ]
-    },
+                text: "A. Answer",
 
+                action: () => {
 
-    frontDoor: {
-        text: `
-            You walk toward the house.
+                    changeSanity(-15);
 
-            <br><br>
+                    return "phone";
 
-            The front yard is completely overgrown.
+                }
 
-            <br><br>
-
-            You notice something strange.
-
-            <br><br>
-
-            There are dozens of photographs scattered across the ground.
-
-            <br><br>
-
-            You pick one up.
-
-            <br><br>
-
-            It's a photograph of you.
-
-            <br><br>
-
-            You're standing in this exact yard.
-
-            <br><br>
-
-            But the photograph looks at least twenty years old.
-
-            <br><br>
-
-            The front door slowly opens.
-        `,
-
-        choices: [
-            {
-                text: "A. Enter the house.",
-                next: "foyer"
             },
 
             {
-                text: "B. Run back to the car.",
-                next: "runCar"
+                text: "B. Ignore it",
+
+                action: () => {
+
+                    return "road";
+
+                }
+
             }
+
         ]
+
     },
 
 
-    runCar: {
+    carFace: {
+
         text: `
-            You turn around and run.
 
-            <br><br>
+        You slowly turn your head.
 
-            You reach your car.
+        <br><br>
 
-            <br><br>
+        There is no face.
 
-            The doors are locked.
+        <br><br>
 
-            <br><br>
+        Just skin.
 
-            You look through the window.
+        <br><br>
 
-            <br><br>
+        Smooth skin stretched across a human-shaped head.
 
-            Someone is sitting in the driver's seat.
+        <br><br>
 
-            <br><br>
+        Something taps the window.
 
-            You can't see their face.
+        <br><br>
+
+        Once.
+
+        <br><br>
+
+        Twice.
+
+        <br><br>
+
+        Three times.
+
         `,
 
         choices: [
+
             {
-                text: "A. Open the driver's door.",
-                next: "driver"
+                text: "A. Close your eyes",
+
+                action: () => {
+
+                    changeSanity(-15);
+
+                    return "frontDoor";
+
+                }
+
             },
 
             {
-                text: "B. Run back toward the house.",
-                next: "foyer"
+                text: "B. Keep looking",
+
+                action: () => {
+
+                    changeSanity(-60);
+
+                    return "faceDeath";
+
+                }
+
             }
+
         ]
+
     },
 
 
-    driver: {
+    faceDeath: {
+
         text: `
-            You open the door.
 
-            <br><br>
+        The thing smiles.
 
-            The driver's seat is empty.
+        <br><br>
 
-            <br><br>
+        You never saw its mouth before.
 
-            You look around.
+        <br><br>
 
-            <br><br>
+        But now you can.
 
-            The house is gone.
+        <br><br>
 
-            <br><br>
+        It opens far wider than a human mouth should.
 
-            There's nothing but darkness where it stood.
+        `,
 
-            <br><br>
+        choices: []
 
-            Your phone vibrates.
+    },
 
-            <br><br>
 
-            One new message:
+    phone: {
 
-            <br><br>
+        text: `
 
-            <strong>"YOU SHOULD HAVE STAYED INSIDE."</strong>
+        You answer.
+
+        <br><br>
+
+        Your own voice speaks from the other end.
+
+        <br><br>
+
+        <strong>
+        "Don't turn around."
+        </strong>
+
+        <br><br>
+
+        You slowly look into the rearview mirror.
+
         `,
 
         choices: [
+
             {
-                text: "A. Run into the darkness.",
-                next: "darkness"
+                text: "A. Keep driving",
+
+                action: () => {
+
+                    return "road";
+
+                }
+
             },
 
             {
-                text: "B. Call for help.",
-                next: "badEnding"
+                text: "B. Turn around",
+
+                action: () => {
+
+                    changeSanity(-50);
+
+                    return "phoneDeath";
+
+                }
+
             }
+
         ]
-    },
 
-
-    darkness: {
-        text: `
-            You run.
-
-            <br><br>
-
-            You don't know where you're going.
-
-            <br><br>
-
-            You trip and fall.
-
-            <br><br>
-
-            When you look up...
-
-            <br><br>
-
-            You're standing inside the house again.
-
-            <br><br>
-
-            <strong>END OF CHAPTER ONE.</strong>
-        `,
-
-        choices: [
-            {
-                text: "PLAY AGAIN",
-                next: "start"
-            }
-        ]
-    },
-
-
-    badEnding: {
-        text: `
-            You scream for help.
-
-            <br><br>
-
-            Something screams back.
-
-            <br><br>
-
-            But it isn't human.
-
-            <br><br>
-
-            The darkness surrounds you.
-
-            <br><br>
-
-            <span class="death">BAD ENDING</span>
-        `,
-
-        choices: [
-            {
-                text: "PLAY AGAIN",
-                next: "start"
-            }
-        ]
-    },
-
-
-    hangUp: {
-        text: `
-            You immediately hang up.
-
-            <br><br>
-
-            Your phone rings again.
-
-            <br><br>
-
-            You ignore it.
-
-            <br><br>
-
-            It rings again.
-
-            <br><br>
-
-            And again.
-
-            <br><br>
-
-            Finally, a message appears:
-
-            <br><br>
-
-            <strong>"YOU WERE WARNED."</strong>
-        `,
-
-        choices: [
-            {
-                text: "A. Leave the car.",
-                next: "frontDoor"
-            },
-
-            {
-                text: "B. Keep ignoring the phone.",
-                next: "phoneDeath"
-            }
-        ]
     },
 
 
     phoneDeath: {
+
         text: `
-            The phone stops ringing.
 
-            <br><br>
+        Someone is sitting in the back seat.
 
-            You breathe a sigh of relief.
+        <br><br>
 
-            <br><br>
+        You were sure it was empty.
 
-            Then your phone lights up.
+        <br><br>
 
-            <br><br>
+        The figure leans forward.
 
-            It's the camera.
+        <br><br>
 
-            <br><br>
+        And whispers your name.
 
-            The camera is showing you sitting in your car.
+        `,
 
-            <br><br>
+        choices: []
 
-            But the camera isn't your phone.
+    },
 
-            <br><br>
 
-            It's somewhere outside the car.
+    road: {
 
-            <br><br>
+        text: `
 
-            <span class="death">YOU DIED.</span>
+        You keep driving.
+
+        <br><br>
+
+        Ten minutes pass.
+
+        <br><br>
+
+        Twenty.
+
+        <br><br>
+
+        Then you realize something.
+
+        <br><br>
+
+        You've passed the same tree six times.
+
+        <br><br>
+
+        The house is still behind you.
+
+        <br><br>
+
+        But somehow...
+
+        <br><br>
+
+        you're back in front of it.
+
         `,
 
         choices: [
+
             {
-                text: "PLAY AGAIN",
-                next: "start"
+                text: "A. Go inside the house",
+
+                action: () => {
+
+                    return "frontDoor";
+
+                }
+
+            },
+
+            {
+                text: "B. Keep driving",
+
+                action: () => {
+
+                    changeSanity(-20);
+
+                    return "roadAgain";
+
+                }
+
             }
+
         ]
+
+    },
+
+
+    roadAgain: {
+
+        text: `
+
+        You keep driving.
+
+        <br><br>
+
+        The road becomes darker.
+
+        <br><br>
+
+        Your headlights flicker.
+
+        <br><br>
+
+        Then the engine dies.
+
+        <br><br>
+
+        Your flashlight is your only light.
+
+        `,
+
+        choices: [
+
+            {
+                text: "A. Walk toward the house",
+
+                action: () => {
+
+                    useBattery(15);
+
+                    return "frontDoor";
+
+                }
+
+            },
+
+            {
+                text: "B. Stay in the car",
+
+                action: () => {
+
+                    changeSanity(-30);
+
+                    return "car";
+
+                }
+
+            }
+
+        ]
+
+    },
+
+
+    frontDoor: {
+
+        text: `
+
+        You stand in front of the house.
+
+        <br><br>
+
+        The front door is slightly open.
+
+        <br><br>
+
+        You notice something carved into the wood.
+
+        <br><br>
+
+        <strong>
+        YOUR NAME.
+        </strong>
+
+        <br><br>
+
+        Beneath it is a second message:
+
+        <br><br>
+
+        <em>
+        YOU CAME BACK.
+        </em>
+
+        `,
+
+        choices: [
+
+            {
+                text: "A. Enter the house",
+
+                action: () => {
+
+                    findClue();
+
+                    return "foyer";
+
+                }
+
+            },
+
+            {
+                text: "B. Search around the house",
+
+                action: () => {
+
+                    useBattery(10);
+
+                    return "outside";
+
+                }
+
+            }
+
+        ]
+
+    },
+
+
+    outside: {
+
+        text: `
+
+        You walk around the side of the house.
+
+        <br><br>
+
+        Behind the building you find an old wooden shed.
+
+        <br><br>
+
+        The lock has been broken.
+
+        <br><br>
+
+        Something inside is moving.
+
+        `,
+
+        choices: [
+
+            {
+                text: "A. Open the shed",
+
+                action: () => {
+
+                    findClue();
+
+                    addItem("Rusty Key");
+
+                    changeSanity(-5);
+
+                    return "shed";
+
+                }
+
+            },
+
+            {
+                text: "B. Go back to the front door",
+
+                action: () => {
+
+                    return "frontDoor";
+
+                }
+
+            }
+
+        ]
+
+    },
+
+
+    shed: {
+
+        text: `
+
+        The shed smells like wet earth.
+
+        <br><br>
+
+        Your flashlight catches something hanging
+        from the ceiling.
+
+        <br><br>
+
+        Dozens of photographs.
+
+        <br><br>
+
+        Every photograph shows the same house.
+
+        <br><br>
+
+        But in each photograph...
+
+        <br><br>
+
+        <strong>
+        YOU ARE THERE.
+        </strong>
+
+        `,
+
+        choices: [
+
+            {
+                text: "A. Take the photographs",
+
+                action: () => {
+
+                    findClue();
+
+                    addItem("Photographs");
+
+                    changeSanity(-10);
+
+                    return "foyer";
+
+                }
+
+            },
+
+            {
+                text: "B. Leave immediately",
+
+                action: () => {
+
+                    return "frontDoor";
+
+                }
+
+            }
+
+        ]
+
     },
 
 
     foyer: {
+
         text: `
-            You step inside.
 
-            <br><br>
+        The door closes behind you.
 
-            The door slams shut.
+        <br><br>
 
-            <br><br>
+        <strong>
+        CLICK.
+        </strong>
 
-            You try the handle.
+        <br><br>
 
-            <br><br>
+        Locked.
 
-            Locked.
+        <br><br>
 
-            <br><br>
+        The foyer is enormous.
 
-            The house is completely silent.
+        <br><br>
 
-            <br><br>
+        Dust covers everything except one thing:
 
-            In front of you are three doors.
+        <br><br>
 
-            <br><br>
+        a child's handprint on the wall.
 
-            One leads to the kitchen.
+        <br><br>
 
-            <br><br>
+        It looks fresh.
 
-            One leads upstairs.
-
-            <br><br>
-
-            One leads to the basement.
-
-            <br><br>
-
-            You hear something moving downstairs.
         `,
 
         choices: [
+
             {
-                text: "A. Search the kitchen.",
-                next: "kitchen"
+                text: "A. Go toward the kitchen",
+
+                action: () => {
+
+                    return "kitchen";
+
+                }
+
             },
 
             {
-                text: "B. Go upstairs.",
-                next: "upstairs"
+                text: "B. Go upstairs",
+
+                action: () => {
+
+                    changeSanity(-5);
+
+                    return "upstairs";
+
+                }
+
             }
+
         ]
+
     },
 
 
     kitchen: {
+
         text: `
-            You enter the kitchen.
 
-            <br><br>
+        The kitchen is freezing.
 
-            Everything is covered in dust.
+        <br><br>
 
-            <br><br>
+        A refrigerator hums in the corner.
 
-            You find a flashlight.
+        <br><br>
 
-            <br><br>
+        You open it.
 
-            The batteries are almost dead.
+        <br><br>
 
-            <br><br>
+        Nothing.
 
-            You also find a kitchen knife.
+        <br><br>
 
-            <br><br>
+        Then you notice something written
+        on the inside of the door.
 
-            Suddenly...
+        <br><br>
 
-            <br><br>
+        <strong>
+        SHE HIDES BELOW.
+        </strong>
 
-            <strong>BANG.</strong>
-
-            <br><br>
-
-            Something just slammed against the basement door.
         `,
 
         choices: [
+
             {
-                text: "A. Take the knife and investigate.",
-                next: "basement"
+                text: "A. Search the drawers",
+
+                action: () => {
+
+                    addItem("Kitchen Knife");
+
+                    return "kitchenSearch";
+
+                }
+
             },
 
             {
-                text: "B. Take the flashlight and go upstairs.",
-                next: "upstairs"
+                text: "B. Leave the kitchen",
+
+                action: () => {
+
+                    return "upstairs";
+
+                }
+
             }
+
         ]
+
+    },
+
+
+    kitchenSearch: {
+
+        text: `
+
+        You search through the drawers.
+
+        <br><br>
+
+        Most are empty.
+
+        <br><br>
+
+        One contains a kitchen knife.
+
+        <br><br>
+
+        You take it.
+
+        <br><br>
+
+        Something moves upstairs.
+
+        `,
+
+        choices: [
+
+            {
+                text: "A. Investigate the noise",
+
+                action: () => {
+
+                    changeSanity(-10);
+
+                    return "upstairs";
+
+                }
+
+            },
+
+            {
+                text: "B. Search the kitchen again",
+
+                action: () => {
+
+                    findClue();
+
+                    return "kitchenClue";
+
+                }
+
+            }
+
+        ]
+
+    },
+
+
+    kitchenClue: {
+
+        text: `
+
+        Behind a cabinet you find a child's drawing.
+
+        <br><br>
+
+        It shows a family standing in front of this house.
+
+        <br><br>
+
+        You recognize the people.
+
+        <br><br>
+
+        One of them is you.
+
+        <br><br>
+
+        You don't remember ever being here.
+
+        `,
+
+        choices: [
+
+            {
+                text: "A. Take the drawing",
+
+                action: () => {
+
+                    addItem("Child's Drawing");
+
+                    findClue();
+
+                    changeSanity(-15);
+
+                    return "upstairs";
+
+                }
+
+            },
+
+            {
+                text: "B. Leave it",
+
+                action: () => {
+
+                    return "upstairs";
+
+                }
+
+            }
+
+        ]
+
     },
 
 
     upstairs: {
+
         text: `
-            You slowly climb the stairs.
 
-            <br><br>
+        The staircase groans beneath your weight.
 
-            Every step creaks.
+        <br><br>
 
-            <br><br>
+        Halfway up...
 
-            At the top of the stairs you see three doors.
+        <br><br>
 
-            <br><br>
+        you hear footsteps above you.
 
-            One is slightly open.
+        <br><br>
 
-            <br><br>
+        Slow.
 
-            You hear a child laughing behind it.
+        <br><br>
+
+        Barefoot.
+
+        <br><br>
+
+        They stop.
+
         `,
 
         choices: [
+
             {
-                text: "A. Open the door.",
-                next: "childRoom"
+                text: "A. Keep going",
+
+                action: () => {
+
+                    useBattery(10);
+
+                    return "hallway";
+
+                }
+
             },
 
             {
-                text: "B. Walk past it.",
-                next: "hallway"
+                text: "B. Go back downstairs",
+
+                action: () => {
+
+                    changeSanity(-5);
+
+                    return "foyer";
+
+                }
+
             }
+
         ]
-    },
 
-
-    childRoom: {
-        text: `
-            You slowly open the door.
-
-            <br><br>
-
-            The room is empty.
-
-            <br><br>
-
-            There is an old music box on the floor.
-
-            <br><br>
-
-            It starts playing by itself.
-
-            <br><br>
-
-            Then you notice writing on the wall.
-
-            <br><br>
-
-            <strong>"SHE IS STILL HERE."</strong>
-
-            <br><br>
-
-            Behind you...
-
-            <br><br>
-
-            the door closes.
-        `,
-
-        choices: [
-            {
-                text: "A. Try to open the door.",
-                next: "lockedRoom"
-            },
-
-            {
-                text: "B. Search the room.",
-                next: "searchRoom"
-            }
-        ]
-    },
-
-
-    lockedRoom: {
-        text: `
-            You grab the door handle.
-
-            <br><br>
-
-            It won't move.
-
-            <br><br>
-
-            You hear breathing behind you.
-
-            <br><br>
-
-            Slowly...
-
-            <br><br>
-
-            you turn around.
-
-            <br><br>
-
-            <span class="death">YOU DIED.</span>
-        `,
-
-        choices: [
-            {
-                text: "PLAY AGAIN",
-                next: "start"
-            }
-        ]
-    },
-
-
-    searchRoom: {
-        text: `
-            You search the room.
-
-            <br><br>
-
-            Under the bed you find a small brass key.
-
-            <br><br>
-
-            You also find an old photograph.
-
-            <br><br>
-
-            The photograph shows your family.
-
-            <br><br>
-
-            Someone has been scratched out of the picture.
-
-            <br><br>
-
-            On the back is written:
-
-            <br><br>
-
-            <strong>"BASEMENT. MIDNIGHT."</strong>
-        `,
-
-        choices: [
-            {
-                text: "A. Take the key and leave.",
-                next: "hallway"
-            },
-
-            {
-                text: "B. Look under the bed again.",
-                next: "bed"
-            }
-        ]
-    },
-
-
-    bed: {
-        text: `
-            You look underneath the bed again.
-
-            <br><br>
-
-            Something grabs your wrist.
-
-            <br><br>
-
-            You scream.
-
-            <br><br>
-
-            You pull yourself free.
-
-            <br><br>
-
-            Whatever was underneath the bed is gone.
-
-            <br><br>
-
-            But now there are muddy footprints leading toward the door.
-        `,
-
-        choices: [
-            {
-                text: "A. Follow the footprints.",
-                next: "hallway"
-            },
-
-            {
-                text: "B. Stay in the room.",
-                next: "lockedRoom"
-            }
-        ]
     },
 
 
     hallway: {
+
         text: `
-            You walk down the hallway.
 
-            <br><br>
+        Three doors.
 
-            The house suddenly goes completely silent.
+        <br><br>
 
-            <br><br>
+        Bedroom.
 
-            Then you hear a voice downstairs.
+        <br><br>
 
-            <br><br>
+        Bathroom.
 
-            Your mother's voice.
+        <br><br>
 
-            <br><br>
+        And at the very end...
 
-            "Come downstairs."
+        <br><br>
 
-            <br><br>
+        a locked door.
 
-            "I need you."
+        <br><br>
 
-            <br><br>
+        From behind the locked door comes a quiet voice.
 
-            But your mother is thousands of miles away.
+        <br><br>
+
+        <strong>
+        "Please let me out."
+        </strong>
+
         `,
 
         choices: [
+
             {
-                text: "A. Go downstairs.",
-                next: "basement"
+                text: "A. Open the bedroom",
+
+                action: () => {
+
+                    return "bedroom";
+
+                }
+
             },
 
             {
-                text: "B. Hide in the bedroom.",
-                next: "hideBedroom"
+                text: "B. Try the locked door",
+
+                action: () => {
+
+                    if (
+                        gameState.inventory.includes("Rusty Key")
+                    ) {
+
+                        return "lockedRoom";
+
+                    }
+
+                    changeSanity(-10);
+
+                    return "locked";
+
+                }
+
             }
+
         ]
+
     },
 
 
-    hideBedroom: {
+    bedroom: {
+
         text: `
-            You hide inside the bedroom closet.
 
-            <br><br>
+        The bedroom looks untouched.
 
-            Footsteps approach.
+        <br><br>
 
-            <br><br>
+        A bed sits against the wall.
 
-            They stop directly outside the door.
+        <br><br>
 
-            <br><br>
+        On the nightstand is a photograph.
 
-            Silence.
+        <br><br>
 
-            <br><br>
+        You pick it up.
 
-            Then the closet door slowly opens.
+        <br><br>
 
-            <br><br>
+        It's a picture of you as a child.
 
-            <span class="death">YOU DIED.</span>
+        <br><br>
+
+        Standing beside a woman you don't recognize.
+
         `,
 
         choices: [
+
             {
-                text: "PLAY AGAIN",
-                next: "start"
+                text: "A. Examine the photograph",
+
+                action: () => {
+
+                    findClue();
+
+                    addItem("Old Photograph");
+
+                    changeSanity(-10);
+
+                    return "bedroomPhoto";
+
+                }
+
+            },
+
+            {
+                text: "B. Put it down",
+
+                action: () => {
+
+                    return "hallway";
+
+                }
+
             }
+
         ]
+
+    },
+
+
+    bedroomPhoto: {
+
+        text: `
+
+        On the back of the photograph is a date.
+
+        <br><br>
+
+        <strong>
+        OCTOBER 10.
+        </strong>
+
+        <br><br>
+
+        Beneath it:
+
+        <br><br>
+
+        <em>
+        THE DAY SHE CAME BACK.
+        </em>
+
+        <br><br>
+
+        You hear someone whisper behind you.
+
+        <br><br>
+
+        "You were supposed to remember."
+
+        `,
+
+        choices: [
+
+            {
+                text: "A. Turn around",
+
+                action: () => {
+
+                    changeSanity(-30);
+
+                    return "hallway";
+
+                }
+
+            },
+
+            {
+                text: "B. Run",
+
+                action: () => {
+
+                    return "run";
+
+                }
+
+            }
+
+        ]
+
+    },
+
+
+    run: {
+
+        text: `
+
+        You sprint into the hallway.
+
+        <br><br>
+
+        The house is no longer quiet.
+
+        <br><br>
+
+        Doors slam behind you.
+
+        <br><br>
+
+        Something is running after you.
+
+        `,
+
+        choices: [
+
+            {
+                text: "A. Run downstairs",
+
+                action: () => {
+
+                    changeHealth(-20);
+
+                    return "foyer";
+
+                }
+
+            },
+
+            {
+                text: "B. Hide in the bathroom",
+
+                action: () => {
+
+                    changeSanity(-20);
+
+                    return "bathroom";
+
+                }
+
+            }
+
+        ]
+
+    },
+
+
+    bathroom: {
+
+        text: `
+
+        You lock the bathroom door.
+
+        <br><br>
+
+        Silence.
+
+        <br><br>
+
+        Then...
+
+        <br><br>
+
+        three slow knocks.
+
+        <br><br>
+
+        <strong>
+        KNOCK.
+
+        KNOCK.
+
+        KNOCK.
+        </strong>
+
+        `,
+
+        choices: [
+
+            {
+                text: "A. Stay silent",
+
+                action: () => {
+
+                    changeSanity(-10);
+
+                    return "bathroomWait";
+
+                }
+
+            },
+
+            {
+                text: "B. Open the door",
+
+                action: () => {
+
+                    changeHealth(-50);
+
+                    return "bathroomDeath";
+
+                }
+
+            }
+
+        ]
+
+    },
+
+
+    bathroomWait: {
+
+        text: `
+
+        The knocking stops.
+
+        <br><br>
+
+        You wait.
+
+        <br><br>
+
+        Five minutes.
+
+        <br><br>
+
+        Ten.
+
+        <br><br>
+
+        When you finally open the door...
+
+        <br><br>
+
+        the hallway is empty.
+
+        `,
+
+        choices: [
+
+            {
+                text: "A. Continue down the hallway",
+
+                action: () => {
+
+                    return "hallway";
+
+                }
+
+            },
+
+            {
+                text: "B. Go downstairs",
+
+                action: () => {
+
+                    return "foyer";
+
+                }
+
+            }
+
+        ]
+
+    },
+
+
+    locked: {
+
+        text: `
+
+        You pull on the door.
+
+        <br><br>
+
+        It doesn't move.
+
+        <br><br>
+
+        From the other side:
+
+        <br><br>
+
+        <strong>
+        "You forgot the key."
+        </strong>
+
+        <br><br>
+
+        Your flashlight flickers.
+
+        `,
+
+        choices: [
+
+            {
+                text: "A. Search the house",
+
+                action: () => {
+
+                    return "basementDoor";
+
+                }
+
+            },
+
+            {
+                text: "B. Keep pulling the door",
+
+                action: () => {
+
+                    changeHealth(-10);
+
+                    changeSanity(-10);
+
+                    return "locked";
+
+                }
+
+            }
+
+        ]
+
+    },
+
+
+    basementDoor: {
+
+        text: `
+
+        You find a staircase leading down.
+
+        <br><br>
+
+        The air becomes colder.
+
+        <br><br>
+
+        You hear something moving below.
+
+        `,
+
+        choices: [
+
+            {
+                text: "A. Go downstairs",
+
+                action: () => {
+
+                    useBattery(20);
+
+                    return "basement";
+
+                }
+
+            },
+
+            {
+                text: "B. Go back upstairs",
+
+                action: () => {
+
+                    return "hallway";
+
+                }
+
+            }
+
+        ]
+
     },
 
 
     basement: {
+
         text: `
-            You walk toward the basement.
 
-            <br><br>
+        The basement is almost completely dark.
 
-            The basement door is locked.
+        <br><br>
 
-            <br><br>
+        Your flashlight reveals old boxes.
 
-            You remember the brass key.
+        <br><br>
 
-            <br><br>
+        One box has your name written on it.
 
-            You put it into the lock.
-
-            <br><br>
-
-            <strong>CLICK.</strong>
-
-            <br><br>
-
-            The door opens.
-
-            <br><br>
-
-            A cold breeze comes from downstairs.
-
-            <br><br>
-
-            You hear someone whisper your name.
         `,
 
         choices: [
+
             {
-                text: "A. Go downstairs.",
-                next: "basementInside"
+                text: "A. Open the box",
+
+                action: () => {
+
+                    findClue();
+
+                    return "box";
+
+                }
+
             },
 
             {
-                text: "B. Close the door.",
-                next: "basementClose"
+                text: "B. Leave the basement",
+
+                action: () => {
+
+                    return "hallway";
+
+                }
+
             }
+
         ]
+
     },
 
 
-    basementClose: {
+    box: {
+
         text: `
-            You close the basement door.
 
-            <br><br>
+        Inside the box are dozens of photographs.
 
-            For a few seconds, everything is quiet.
+        <br><br>
 
-            <br><br>
+        All of them show you.
 
-            Then something pounds against the other side.
+        <br><br>
 
-            <br><br>
+        Different ages.
 
-            <strong>BANG.</strong>
+        <br><br>
 
-            <br>
+        Different years.
 
-            <strong>BANG.</strong>
+        <br><br>
 
-            <br>
+        But every photograph was taken inside this house.
 
-            <strong>BANG.</strong>
+        <br><br>
 
-            <br><br>
+        You finally understand one thing.
 
-            The door begins to crack.
+        <br><br>
+
+        You have been here before.
+
         `,
 
         choices: [
+
             {
-                text: "A. Run upstairs.",
-                next: "upstairs"
+                text: "A. Search deeper",
+
+                action: () => {
+
+                    findClue();
+
+                    changeSanity(-20);
+
+                    return "secret";
+
+                }
+
             },
 
             {
-                text: "B. Open the basement door.",
-                next: "basementInside"
+                text: "B. Get out",
+
+                action: () => {
+
+                    return "escape";
+
+                }
+
             }
+
         ]
+
     },
 
 
-    basementInside: {
+    secret: {
+
         text: `
-            You descend the stairs.
 
-            <br><br>
+        Beneath the photographs is a small metal box.
 
-            At the bottom you find a room filled with photographs.
+        <br><br>
 
-            <br><br>
+        Inside is a handwritten letter.
 
-            Hundreds of them.
+        <br><br>
 
-            <br><br>
+        The handwriting is yours.
 
-            Every photograph is of you.
+        <br><br>
 
-            <br><br>
+        It says:
 
-            Some are from yesterday.
+        <br><br>
 
-            <br><br>
+        <em>
+        "If you're reading this, she found you again."
+        </em>
 
-            Some are from years ago.
+        <br><br>
 
-            <br><br>
+        You hear footsteps behind you.
 
-            One photograph shows you standing in this basement.
-
-            <br><br>
-
-            The photograph was taken tonight.
         `,
 
         choices: [
+
             {
-                text: "A. Search the photographs.",
-                next: "photographs"
+                text: "A. Turn around",
+
+                action: () => {
+
+                    changeSanity(-40);
+
+                    return "finalReveal";
+
+                }
+
             },
 
             {
-                text: "B. Get out immediately.",
-                next: "basementEscape"
+                text: "B. Run",
+
+                action: () => {
+
+                    return "escape";
+
+                }
+
             }
+
         ]
+
     },
 
 
-    photographs: {
+    finalReveal: {
+
         text: `
-            You search through the photographs.
 
-            <br><br>
+        You turn around.
 
-            You find one photograph that looks different.
+        <br><br>
 
-            <br><br>
+        A woman stands at the bottom of the stairs.
 
-            It shows your missing sister.
+        <br><br>
 
-            <br><br>
+        You recognize her.
 
-            She's standing beside the house.
+        <br><br>
 
-            <br><br>
+        She's the woman from the photograph.
 
-            Written on the back:
+        <br><br>
 
-            <br><br>
+        She smiles.
 
-            <strong>"SHE NEVER LEFT."</strong>
+        <br><br>
 
-            <br><br>
+        <strong>
+        "Welcome home."
+        </strong>
 
-            Then you hear a voice behind you.
-
-            <br><br>
-
-            "Finally."
         `,
 
         choices: [
+
             {
-                text: "A. Turn around.",
-                next: "reveal"
+                text: "A. Run",
+
+                action: () => {
+
+                    changeHealth(-30);
+
+                    return "escape";
+
+                }
+
             },
 
             {
-                text: "B. Run.",
-                next: "basementEscape"
+                text: "B. Stay",
+
+                action: () => {
+
+                    changeSanity(-100);
+
+                    return "trueEnding";
+
+                }
+
             }
+
         ]
+
     },
 
 
-    basementEscape: {
+    escape: {
+
         text: `
-            You run toward the stairs.
 
-            <br><br>
+        You run.
 
-            Something grabs your ankle.
+        <br><br>
 
-            <br><br>
+        You don't look back.
 
-            You kick it away.
+        <br><br>
 
-            <br><br>
+        The front door is suddenly open.
 
-            You reach the kitchen.
+        <br><br>
 
-            <br><br>
+        You burst outside.
 
-            The front door is open.
+        <br><br>
 
-            <br><br>
+        Cold air hits your face.
 
-            You run outside.
+        <br><br>
 
-            <br><br>
+        You're free.
 
-            The house watches you from the darkness.
+        <br><br>
 
-            <br><br>
+        Or so you think.
 
-            <strong>ENDING: ESCAPE</strong>
+        <br><br>
+
+        Your phone vibrates.
+
         `,
 
         choices: [
+
             {
-                text: "PLAY AGAIN",
-                next: "start"
+                text: "A. Look at the message",
+
+                action: () => {
+
+                    return "ending";
+
+                }
+
+            },
+
+            {
+                text: "B. Throw the phone away",
+
+                action: () => {
+
+                    return "ending";
+
+                }
+
             }
+
         ]
+
     },
 
 
-    reveal: {
+    ending: {
+
         text: `
-            You slowly turn around.
 
-            <br><br>
+        The message contains one photograph.
 
-            A woman is standing behind you.
+        <br><br>
 
-            <br><br>
+        It's a picture of you standing outside the house.
 
-            It's your sister.
+        <br><br>
 
-            <br><br>
+        The photograph was taken...
 
-            She smiles.
+        <br><br>
 
-            <br><br>
+        <strong>
+        five minutes from now.
+        </strong>
 
-            "I've been waiting for you."
+        <br><br>
 
-            <br><br>
+        <div class="death">
+        TO BE CONTINUED...
+        </div>
 
-            The lights go out.
-
-            <br><br>
-
-            <strong>END OF CHAPTER ONE</strong>
         `,
 
-        choices: [
-            {
-                text: "PLAY AGAIN",
-                next: "start"
-            }
-        ]
+        choices: []
+
+    },
+
+
+    trueEnding: {
+
+        text: `
+
+        You stop fighting.
+
+        <br><br>
+
+        The woman reaches for your hand.
+
+        <br><br>
+
+        Everything goes black.
+
+        <br><br>
+
+        When you open your eyes...
+
+        <br><br>
+
+        you're sitting in the back seat of your car.
+
+        <br><br>
+
+        Your phone reads:
+
+        <br><br>
+
+        <strong>
+        2:13 AM.
+        </strong>
+
+        <br><br>
+
+        The beginning.
+
+        <br><br>
+
+        <div class="death">
+        ENDING: THE LOOP
+        </div>
+
+        `,
+
+        choices: []
+
     }
+
 };
 
+
+// ================================
+// SHOW SCENE
+// ================================
 
 function showScene(sceneName) {
 
     const scene = scenes[sceneName];
 
     if (!scene) {
-        console.error("Scene not found:", sceneName);
+
+        console.error(
+            "Scene not found:",
+            sceneName
+        );
+
         return;
     }
 
-    document.getElementById("story").innerHTML = scene.text;
 
-    const choicesContainer = document.getElementById("choices");
+    document.getElementById("story").innerHTML =
+        scene.text;
 
-    choicesContainer.innerHTML = "";
+
+    const choicesElement =
+        document.getElementById("choices");
+
+    choicesElement.innerHTML = "";
+
 
     scene.choices.forEach(choice => {
 
-        const button = document.createElement("button");
+        const button =
+            document.createElement("button");
 
-        button.textContent = choice.text;
+        button.textContent =
+            choice.text;
 
-        button.addEventListener("click", () => {
-            showScene(choice.next);
-        });
 
-        choicesContainer.appendChild(button);
+        button.onclick = () => {
+
+            const nextScene =
+                choice.action();
+
+            updateHUD();
+
+            if (nextScene) {
+
+                showScene(nextScene);
+
+            }
+
+        };
+
+
+        choicesElement.appendChild(button);
+
     });
 
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
+
+    updateHUD();
+
 }
 
+
+// ================================
+// START GAME
+// ================================
+
+updateHUD();
 
 showScene("start");
