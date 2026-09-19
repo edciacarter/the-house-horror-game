@@ -5,106 +5,210 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>THE HOUSE</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
 </head>
 
+
 <body>
 
-    <main class="game">
 
-        <div class="chapter">
-            CHAPTER ONE
-        </div>
+    <!-- ================================
+         TITLE SCREEN
+    ================================= -->
 
-        <h1>THE HOUSE</h1>
+    <div
+        id="titleScreen"
+        class="title-screen"
+    >
 
-        <!-- GAME HUD -->
+        <div class="title-content">
 
-        <div class="hud">
-
-            <div class="stat">
-                <span>❤️</span>
-
-                <div>
-                    <small>HEALTH</small>
-                    <strong id="health">100</strong>
-                </div>
+            <div class="title-warning">
+                YOU SHOULD NOT BE HERE
             </div>
 
+            <h1>THE HOUSE</h1>
 
-            <div class="stat">
-                <span>🧠</span>
+            <p class="title-subtitle">
+                SOME HOUSES REMEMBER.
+            </p>
 
-                <div>
-                    <small>SANITY</small>
-                    <strong id="sanity">100</strong>
-                </div>
-            </div>
+            <button
+                id="startButton"
+                class="start-button"
+            >
+                ENTER THE HOUSE
+            </button>
 
-
-            <div class="stat">
-                <span>🔦</span>
-
-                <div>
-                    <small>FLASHLIGHT</small>
-                    <strong id="battery">100%</strong>
-                </div>
-            </div>
-
-
-            <div class="stat">
-                <span>🕵🏽</span>
-
-                <div>
-                    <small>CLUES</small>
-                    <strong id="clues">0</strong>
-                </div>
-            </div>
+            <p class="title-warning-small">
+                HEADPHONES RECOMMENDED
+            </p>
 
         </div>
 
+    </div>
 
-        <!-- STORY -->
 
-        <div class="story-box">
+    <!-- ================================
+         GAME
+    ================================= -->
 
-            <div id="story">
-                Loading...
+    <main
+        id="game"
+        class="game-container"
+    >
+
+
+        <header class="game-header">
+
+            <h1>THE HOUSE</h1>
+
+            <p>
+                CHAPTER ONE
+            </p>
+
+        </header>
+
+
+        <!-- ================================
+             HUD
+        ================================= -->
+
+        <section
+            id="hud"
+            class="hud"
+        >
+
+            <div class="stat">
+
+                <span>
+                    HEALTH
+                </span>
+
+                <strong id="health">
+                    100
+                </strong>
+
             </div>
 
-        </div>
+
+            <div class="stat">
+
+                <span>
+                    SANITY
+                </span>
+
+                <strong id="sanity">
+                    100
+                </strong>
+
+            </div>
 
 
-        <!-- CHOICES -->
+            <div class="stat">
 
-        <div id="choices"></div>
+                <span>
+                    BATTERY
+                </span>
+
+                <strong id="battery">
+                    100%
+                </strong>
+
+            </div>
 
 
-        <!-- INVENTORY -->
+            <div class="stat">
 
-        <div class="inventory">
+                <span>
+                    CLUES
+                </span>
 
-            <div class="inventory-title">
+                <strong id="clues">
+                    0
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================
+             STORY
+        ================================= -->
+
+        <section
+            id="story"
+            class="story"
+        >
+
+        </section>
+
+
+        <!-- ================================
+             CHOICES
+        ================================= -->
+
+        <section
+            id="choices"
+            class="choices"
+        >
+
+        </section>
+
+
+        <!-- ================================
+             INVENTORY
+        ================================= -->
+
+        <section
+            class="inventory"
+        >
+
+            <span>
                 INVENTORY
-            </div>
+            </span>
 
             <div id="inventory">
                 Empty
             </div>
 
-        </div>
+        </section>
+
+
+        <footer class="game-footer">
+
+            <span>
+                THE HOUSE
+            </span>
+
+            <span>
+                CHAPTER ONE
+            </span>
+
+        </footer>
+
 
     </main>
 
 
-    <!-- GAME SCRIPT -->
+    <!-- ================================
+         JAVASCRIPT
+    ================================= -->
 
-    <script src="game.js?v=4"></script>
+    <script src="game.js"></script>
+
 
 </body>
 
