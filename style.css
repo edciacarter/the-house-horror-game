@@ -281,3 +281,87 @@ button:active {
     }
 
 }
+
+/* =========================
+   LOW SANITY EFFECT
+   ========================= */
+
+body.insane {
+    animation: sanityShake 0.15s infinite;
+}
+
+body.insane .story-box {
+    border-color: #600000;
+
+    box-shadow:
+        0 0 30px rgba(120, 0, 0, 0.5),
+        0 0 80px rgba(120, 0, 0, 0.2);
+}
+
+body.insane h1 {
+    animation: sanityFlicker 1.2s infinite;
+}
+
+body.insane #story {
+    animation: sanityText 2s infinite;
+}
+
+@keyframes sanityShake {
+
+    0% {
+        transform: translate(0, 0);
+    }
+
+    25% {
+        transform: translate(-1px, 1px);
+    }
+
+    50% {
+        transform: translate(1px, -1px);
+    }
+
+    75% {
+        transform: translate(-1px, -1px);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+
+}
+
+@keyframes sanityFlicker {
+
+    0%, 100% {
+        opacity: 1;
+    }
+
+    45% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 0.9;
+    }
+
+    52% {
+        opacity: 0.3;
+    }
+
+    55% {
+        opacity: 1;
+    }
+
+}
+
+@keyframes sanityText {
+
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.75;
+    }
+
+}
