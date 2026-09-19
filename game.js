@@ -1,9 +1,13 @@
 // ================================
 // THE HOUSE
 // CHAPTER ONE
-// PHASE 3 — THE HOUSE REMEMBERS
+// PHASE 4 — STORY & ENDINGS
 // ================================
 
+
+// ================================
+// GAME STATE
+// ================================
 
 const gameState = {
 
@@ -11,22 +15,33 @@ const gameState = {
     sanity: 100,
     battery: 100,
     clues: 0,
+
     inventory: [],
 
     sceneCount: 0,
+    houseVisits: 0,
+
     scaresSeen: [],
+
     distortionLevel: 0,
 
-    // ================================
-    // HOUSE MEMORY
-    // ================================
-
-    houseVisits: {},
     changedRooms: [],
     entitySeen: false,
     houseAwake: false,
+
     photographChanged: false,
-    hallwayChanged: false
+    hallwayChanged: false,
+
+    // Story progression
+
+    exploredShed: false,
+    tookPhotographs: false,
+    tookDrawing: false,
+    examinedBedroomPhoto: false,
+    openedLockedRoom: false,
+    searchedBasement: false,
+    discoveredSecret: false,
+    confrontedFigure: false
 
 };
 
@@ -363,16 +378,14 @@ function flashlightScare() {
     `;
 
 
-    clearTemporaryEvent();
+    temporaryEventTimer =
+        setTimeout(() => {
 
+            story.innerHTML = original;
 
-    temporaryEventTimer = setTimeout(() => {
+            temporaryEventTimer = null;
 
-        story.innerHTML = original;
-
-        temporaryEventTimer = null;
-
-    }, 2800);
+        }, 2800);
 
 }
 
@@ -503,16 +516,14 @@ function randomHorrorEvent() {
     `;
 
 
-    clearTemporaryEvent();
+    temporaryEventTimer =
+        setTimeout(() => {
 
+            story.innerHTML = original;
 
-    temporaryEventTimer = setTimeout(() => {
+            temporaryEventTimer = null;
 
-        story.innerHTML = original;
-
-        temporaryEventTimer = null;
-
-    }, 3500);
+        }, 3500);
 
 }
 
@@ -588,16 +599,14 @@ function triggerHallucination() {
     `;
 
 
-    clearTemporaryEvent();
+    temporaryEventTimer =
+        setTimeout(() => {
 
+            story.innerHTML = original;
 
-    temporaryEventTimer = setTimeout(() => {
+            temporaryEventTimer = null;
 
-        story.innerHTML = original;
-
-        temporaryEventTimer = null;
-
-    }, 1800);
+        }, 1800);
 
 }
 
@@ -647,40 +656,48 @@ function phoneDisturbance() {
     `;
 
 
-    clearTemporaryEvent();
+    temporaryEventTimer =
+        setTimeout(() => {
 
+            story.innerHTML = original;
 
-    temporaryEventTimer = setTimeout(() => {
+            temporaryEventTimer = null;
 
-        story.innerHTML = original;
-
-        temporaryEventTimer = null;
-
-    }, 2500);
+        }, 2500);
 
 }
 
 
 // ================================
-// PHASE 3 — HOUSE MEMORY
+// HOUSE REACTIONS
 // ================================
 
 function trackHouseVisit(sceneName) {
 
-    if (!gameState.houseVisits[sceneName]) {
+    const houseScenes = [
 
-        gameState.houseVisits[sceneName] = 0;
+        "frontDoor",
+        "foyer",
+        "kitchen",
+        "upstairs",
+        "hallway",
+        "bedroom",
+        "bathroom",
+        "basement",
+        "lockedRoom",
+        "secret"
+
+    ];
+
+
+    if (houseScenes.includes(sceneName)) {
+
+        gameState.houseVisits++;
 
     }
 
 
-    gameState.houseVisits[sceneName]++;
-
-
-    if (
-        gameState.sceneCount >= 8 &&
-        !gameState.houseAwake
-    ) {
+    if (gameState.houseVisits >= 8) {
 
         gameState.houseAwake = true;
 
@@ -690,217 +707,102 @@ function trackHouseVisit(sceneName) {
 
 
 // ================================
-// HOUSE REACTION
+// CHANGING ROOMS
 // ================================
 
 function getHouseReaction(sceneName) {
 
-    const visits =
-        gameState.houseVisits[sceneName] || 0;
-
-
-    // ================================
-    // FOYER
-    // ================================
-
     if (
-        sceneName === "foyer" &&
-        visits >= 2
+        gameState.changedRooms.includes(sceneName)
     ) {
 
-        return `
+        return "";
 
-            <p style="color:#777;">
+    }
+
+
+    if (gameState.houseVisits < 5) {
+
+        return "";
+
+    }
+
+
+    const reactions = {
+
+        foyer: `
+            <p>
                 You stop.
             </p>
 
             <p>
-                Something is different.
-            </p>
-
-            <p>
-                You are certain there was a door here before.
+                There used to be a door here.
             </p>
 
             <p>
                 Now there is only a wall.
             </p>
+        `,
 
-        `;
-
-    }
-
-
-    // ================================
-    // KITCHEN
-    // ================================
-
-    if (
-        sceneName === "kitchen" &&
-        visits >= 2
-    ) {
-
-        return `
-
+        kitchen: `
             <p>
                 The drawer you left open is closed.
             </p>
 
             <p>
-                You did not close it.
+                You are certain you left it open.
             </p>
+        `,
 
-        `;
-
-    }
-
-
-    // ================================
-    // HALLWAY
-    // ================================
-
-    if (
-        sceneName === "hallway" &&
-        visits >= 2
-    ) {
-
-        gameState.hallwayChanged = true;
-
-
-        return `
-
+        hallway: `
             <p>
-                You stare down the hallway.
+                You count the doors again.
             </p>
 
             <p>
-                There were three doors before.
+                There are four now.
             </p>
 
             <p>
-                Now there are four.
+                There were only three before.
+            </p>
+        `,
+
+        bedroom: `
+            <p>
+                The mattress is indented.
             </p>
 
             <p>
-                You count them again.
+                Someone—or something—was sitting on the bed.
+            </p>
+        `,
+
+        bathroom: `
+            <p>
+                The mirror is covered in fog.
             </p>
 
             <p>
-                <em>Four.</em>
-            </p>
-
-        `;
-
-    }
-
-
-    // ================================
-    // BEDROOM
-    // ================================
-
-    if (
-        sceneName === "bedroom" &&
-        visits >= 2
-    ) {
-
-        return `
-
-            <p>
-                The bedroom feels colder this time.
+                One word has been written across it:
             </p>
 
             <p>
-                The bed is no longer neatly made.
+                <strong>HOME</strong>
             </p>
+        `,
 
-            <p>
-                There is an indentation in the mattress.
-            </p>
-
-            <p>
-                As if someone was just lying there.
-            </p>
-
-        `;
-
-    }
-
-
-    // ================================
-    // BATHROOM
-    // ================================
-
-    if (
-        sceneName === "bathroom" &&
-        visits >= 2
-    ) {
-
-        return `
-
-            <p>
-                The mirror is fogged.
-            </p>
-
-            <p>
-                You haven't used the shower.
-            </p>
-
-            <p>
-                Someone has written a single word into the glass:
-            </p>
-
-            <p>
-                <em>HOME.</em>
-            </p>
-
-        `;
-
-    }
-
-
-    // ================================
-    // BASEMENT
-    // ================================
-
-    if (
-        sceneName === "basement" &&
-        visits >= 2
-    ) {
-
-        return `
-
+        basement: `
             <p>
                 The furniture has moved.
             </p>
 
             <p>
-                Not much.
+                You know you didn't move it.
             </p>
+        `,
 
-            <p>
-                Just enough for you to notice.
-            </p>
-
-            <p>
-                The path back upstairs is now behind you.
-            </p>
-
-        `;
-
-    }
-
-
-    // ================================
-    // OUTSIDE
-    // ================================
-
-    if (
-        sceneName === "outside" &&
-        visits >= 2
-    ) {
-
-        return `
-
+        outside: `
             <p>
                 The shed door is open.
             </p>
@@ -908,109 +810,40 @@ function getHouseReaction(sceneName) {
             <p>
                 You remember closing it.
             </p>
+        `
 
-            <p>
-                Something inside the shed moves.
-            </p>
-
-        `;
-
-    }
+    };
 
 
-    // ================================
-    // LOCKED ROOM
-    // ================================
+    if (!reactions[sceneName]) {
 
-    if (
-        sceneName === "lockedRoom" &&
-        visits >= 1 &&
-        gameState.clues >= 3
-    ) {
-
-        return `
-
-            <p>
-                You notice something you missed before.
-            </p>
-
-            <p>
-                One photograph is newer than the others.
-            </p>
-
-            <p>
-                It shows you standing in this room.
-            </p>
-
-            <p>
-                <em>
-                    But the photograph was taken from behind you.
-                </em>
-            </p>
-
-        `;
+        return "";
 
     }
 
 
-    // ================================
-    // SECRET PASSAGE
-    // ================================
-
-    if (
-        sceneName === "secret" &&
-        gameState.sanity <= 50
-    ) {
-
-        return `
-
-            <p style="color:#8b0000;">
-                The writing on the walls has changed.
-            </p>
-
-            <p>
-                Your name isn't the only thing written anymore.
-            </p>
-
-            <p>
-                Beneath it is a second sentence.
-            </p>
-
-            <p>
-                <em>YOU INVITED ME IN.</em>
-            </p>
-
-        `;
-
-    }
+    gameState.changedRooms.push(sceneName);
 
 
-    return "";
+    return reactions[sceneName];
 
 }
 
 
 // ================================
-// ENTITY SIGHTING
+// ENTITY
 // ================================
 
 function entityEncounter(sceneName) {
 
     if (gameState.entitySeen) {
 
-        return;
+        return "";
 
     }
 
 
-    if (gameState.sanity > 50) {
-
-        return;
-
-    }
-
-
-    const allowedScenes = [
+    const validScenes = [
 
         "hallway",
         "bedroom",
@@ -1021,16 +854,23 @@ function entityEncounter(sceneName) {
     ];
 
 
-    if (!allowedScenes.includes(sceneName)) {
+    if (!validScenes.includes(sceneName)) {
 
-        return;
+        return "";
+
+    }
+
+
+    if (gameState.sanity > 50) {
+
+        return "";
 
     }
 
 
     if (Math.random() > 0.18) {
 
-        return;
+        return "";
 
     }
 
@@ -1038,59 +878,36 @@ function entityEncounter(sceneName) {
     gameState.entitySeen = true;
 
 
-    const story =
-        document.getElementById("story");
+    changeSanity(-5);
 
 
-    const original =
-        story.innerHTML;
-
-
-    story.innerHTML += `
+    return `
 
         <div style="
-            margin-top:30px;
-            padding:18px;
-            text-align:center;
-            color:#aaa;
-            font-style:italic;
+            margin-top:25px;
+            color:#8b0000;
             letter-spacing:2px;
         ">
 
             <p>
-                Someone is standing at the end of the room.
+                Something is standing at the edge of your vision.
             </p>
 
             <p>
-                You cannot see their face.
+                You turn.
             </p>
 
             <p>
-                You look away for one second.
+                Nothing.
             </p>
 
-            <p style="color:#8b0000;">
-                THEY ARE GONE.
+            <p>
+                But you can still feel it watching.
             </p>
 
         </div>
 
     `;
-
-
-    changeSanity(-5);
-
-
-    clearTemporaryEvent();
-
-
-    temporaryEventTimer = setTimeout(() => {
-
-        story.innerHTML = original;
-
-        temporaryEventTimer = null;
-
-    }, 4000);
 
 }
 
@@ -1099,85 +916,60 @@ function entityEncounter(sceneName) {
 // HOUSE WHISPER
 // ================================
 
-function houseWhisper(sceneName) {
+function houseWhisper() {
 
     if (!gameState.houseAwake) {
 
-        return;
+        return "";
 
     }
 
 
-    if (gameState.scaresSeen.includes(
-        "house-whisper"
-    )) {
+    if (
+        gameState.scaresSeen.includes("houseWhisper")
+    ) {
 
-        return;
+        return "";
 
     }
 
 
     if (Math.random() > 0.12) {
 
-        return;
+        return "";
 
     }
 
 
-    gameState.scaresSeen.push(
-        "house-whisper"
-    );
+    gameState.scaresSeen.push("houseWhisper");
 
 
-    const story =
-        document.getElementById("story");
-
-
-    const original =
-        story.innerHTML;
-
-
-    story.innerHTML += `
+    return `
 
         <p style="
-            margin-top:25px;
-            color:#666;
-            text-align:center;
+            color:#777;
             font-style:italic;
         ">
 
-            The house creaks.
+            The house makes a sound.
 
         </p>
 
         <p style="
             color:#8b0000;
-            text-align:center;
         ">
 
-            "Don't leave."
+            <em>"You came back."</em>
 
         </p>
 
     `;
 
-
-    clearTemporaryEvent();
-
-
-    temporaryEventTimer = setTimeout(() => {
-
-        story.innerHTML = original;
-
-        temporaryEventTimer = null;
-
-    }, 3000);
-
 }
 
 
 // ================================
-// PHASE 3 HOUSE SYSTEM
+// HOUSE SYSTEM
 // ================================
 
 function runHouseSystem(sceneName) {
@@ -1185,24 +977,30 @@ function runHouseSystem(sceneName) {
     trackHouseVisit(sceneName);
 
 
+    const story =
+        document.getElementById("story");
+
+
     const reaction =
         getHouseReaction(sceneName);
 
 
-    if (reaction) {
-
-        const story =
-            document.getElementById("story");
+    const entity =
+        entityEncounter(sceneName);
 
 
-        story.innerHTML += reaction;
+    const whisper =
+        houseWhisper();
+
+
+    if (reaction || entity || whisper) {
+
+        story.innerHTML +=
+            reaction +
+            entity +
+            whisper;
 
     }
-
-
-    entityEncounter(sceneName);
-
-    houseWhisper(sceneName);
 
 }
 
@@ -1244,6 +1042,61 @@ function runHorrorSystem(sceneName) {
     triggerHallucination();
 
     phoneDisturbance();
+
+}
+
+
+// ================================
+// DETERMINE ENDING
+// ================================
+
+function determineEnding() {
+
+    // SECRET / TRUE ENDING
+    //
+    // Player discovered most of the evidence
+    // and reached the hidden passage.
+
+    if (
+        gameState.discoveredSecret &&
+        gameState.clues >= 5 &&
+        gameState.inventory.includes("Rusty Key") &&
+        gameState.inventory.includes("Photographs") &&
+        gameState.inventory.includes("Child's Drawing") &&
+        gameState.inventory.includes("Old Photograph")
+    ) {
+
+        return "trueEnding";
+
+    }
+
+
+    // LOST ENDING
+    //
+    // Sanity has collapsed.
+
+    if (gameState.sanity <= 25) {
+
+        return "lostEnding";
+
+    }
+
+
+    // HOUSE ENDING
+    //
+    // The player escaped physically,
+    // but never uncovered enough of the truth.
+
+    if (gameState.clues <= 2) {
+
+        return "houseEnding";
+
+    }
+
+
+    // NORMAL SURVIVAL ENDING
+
+    return "ending";
 
 }
 
@@ -1795,6 +1648,8 @@ const scenes = {
 
                     addItem("Rusty Key");
 
+                    gameState.exploredShed = true;
+
                     changeSanity(-5);
 
                     return "shed";
@@ -1842,6 +1697,8 @@ const scenes = {
                     findClue();
 
                     addItem("Photographs");
+
+                    gameState.tookPhotographs = true;
 
                     changeSanity(-10);
 
@@ -2023,6 +1880,8 @@ const scenes = {
 
                     addItem("Child's Drawing");
 
+                    gameState.tookDrawing = true;
+
                     findClue();
 
                     changeSanity(-15);
@@ -2131,6 +1990,8 @@ const scenes = {
                         gameState.inventory.includes("Rusty Key")
                     ) {
 
+                        gameState.openedLockedRoom = true;
+
                         return "lockedRoom";
 
                     }
@@ -2168,6 +2029,8 @@ const scenes = {
                     findClue();
 
                     addItem("Old Photograph");
+
+                    gameState.examinedBedroomPhoto = true;
 
                     changeSanity(-10);
 
@@ -2525,6 +2388,8 @@ const scenes = {
 
                     findClue();
 
+                    gameState.searchedBasement = true;
+
                     return "box";
 
                 }
@@ -2613,6 +2478,10 @@ const scenes = {
 
                 action: () => {
 
+                    gameState.discoveredSecret = true;
+
+                    gameState.confrontedFigure = true;
+
                     changeSanity(-40);
 
                     return "finalReveal";
@@ -2626,6 +2495,8 @@ const scenes = {
                 text: "B — Escape",
 
                 action: () => {
+
+                    gameState.discoveredSecret = true;
 
                     return "escape";
 
@@ -2715,7 +2586,7 @@ const scenes = {
 
                 action: () => {
 
-                    return "ending";
+                    return determineEnding();
 
                 }
 
@@ -2727,7 +2598,7 @@ const scenes = {
 
                 action: () => {
 
-                    return "ending";
+                    return determineEnding();
 
                 }
 
@@ -2738,38 +2609,317 @@ const scenes = {
     },
 
 
+    // ================================
+    // NORMAL ENDING
+    // ================================
+
     ending: {
 
         text: `
 
         <div class="death">
-            TO BE CONTINUED...
+            YOU ESCAPED
         </div>
 
-        <p>CHAPTER ONE COMPLETE.</p>
+        <p>
+            You make it to the road.
+        </p>
+
+        <p>
+            The house disappears behind you.
+        </p>
+
+        <p>
+            You don't look back.
+        </p>
+
+        <p>
+            For the first time that night,
+            you can breathe.
+        </p>
+
+        <p>
+            Then your phone lights up.
+        </p>
+
+        <p>
+            <em>
+                "WE'LL SEE YOU AGAIN."
+            </em>
+        </p>
+
+        <p>
+            CHAPTER ONE COMPLETE.
+        </p>
 
         `,
 
-        choices: []
+        choices: [
+
+            {
+                text: "PLAY AGAIN",
+
+                action: () => {
+
+                    location.reload();
+
+                    return null;
+
+                }
+
+            }
+
+        ]
 
     },
 
+
+    // ================================
+    // HOUSE ENDING
+    // ================================
+
+    houseEnding: {
+
+        text: `
+
+        <div class="death">
+            THE HOUSE LET YOU GO
+        </div>
+
+        <p>
+            You made it out.
+        </p>
+
+        <p>
+            But you never discovered why the house wanted you there.
+        </p>
+
+        <p>
+            As you drive away,
+            you look into the rearview mirror.
+        </p>
+
+        <p>
+            The house is still standing.
+        </p>
+
+        <p>
+            Someone is watching from the upstairs window.
+        </p>
+
+        <p>
+            You don't know who.
+        </p>
+
+        <p>
+            CHAPTER ONE COMPLETE.
+        </p>
+
+        `,
+
+        choices: [
+
+            {
+                text: "PLAY AGAIN",
+
+                action: () => {
+
+                    location.reload();
+
+                    return null;
+
+                }
+
+            }
+
+        ]
+
+    },
+
+
+    // ================================
+    // LOST ENDING
+    // ================================
+
+    lostEnding: {
+
+        text: `
+
+        <div class="death">
+            YOU BROKE
+        </div>
+
+        <p>
+            You run.
+        </p>
+
+        <p>
+            You don't remember leaving the house.
+        </p>
+
+        <p>
+            You don't remember getting into the car.
+        </p>
+
+        <p>
+            You don't even remember your own name.
+        </p>
+
+        <p>
+            When the sun rises,
+            you're still sitting outside the house.
+        </p>
+
+        <p>
+            The front door is open.
+        </p>
+
+        <p>
+            And somewhere inside,
+            someone is calling you.
+        </p>
+
+        <p>
+            CHAPTER ONE COMPLETE.
+        </p>
+
+        `,
+
+        choices: [
+
+            {
+                text: "PLAY AGAIN",
+
+                action: () => {
+
+                    location.reload();
+
+                    return null;
+
+                }
+
+            }
+
+        ]
+
+    },
+
+
+    // ================================
+    // TRUE ENDING
+    // ================================
 
     trueEnding: {
 
         text: `
 
         <div class="death">
-            YOU WERE NEVER THE ONE ESCAPING.
+            THE TRUTH
         </div>
 
-        <p>The house was waiting for you.</p>
+        <p>
+            You stare at the photographs.
+        </p>
 
-        <p>And now it knows your name.</p>
+        <p>
+            The drawings.
+        </p>
+
+        <p>
+            The key.
+        </p>
+
+        <p>
+            The room that should not exist.
+        </p>
+
+        <p>
+            Suddenly, everything connects.
+        </p>
+
+        <p>
+            The house wasn't showing you memories.
+        </p>
+
+        <p>
+            It was recording them.
+        </p>
+
+        <p>
+            Every person who entered.
+        </p>
+
+        <p>
+            Every disappearance.
+        </p>
+
+        <p>
+            Every version of you.
+        </p>
+
+        <p>
+            You look down at the newest photograph.
+        </p>
+
+        <p>
+            It was taken only seconds ago.
+        </p>
+
+        <p>
+            In the photograph,
+            you are standing outside the house.
+        </p>
+
+        <p>
+            But you are not alone.
+        </p>
+
+        <p>
+            Something is standing behind you.
+        </p>
+
+        <p>
+            You slowly turn around.
+        </p>
+
+        <p>
+            Nothing.
+        </p>
+
+        <p>
+            You look back at the photograph.
+        </p>
+
+        <p>
+            The figure is closer.
+        </p>
+
+        <div class="death">
+            YOU WERE NEVER THE FIRST.
+        </div>
+
+        <p>
+            CHAPTER ONE COMPLETE.
+        </p>
 
         `,
 
-        choices: []
+        choices: [
+
+            {
+                text: "PLAY AGAIN",
+
+                action: () => {
+
+                    location.reload();
+
+                    return null;
+
+                }
+
+            }
+
+        ]
 
     }
 
@@ -2782,10 +2932,8 @@ const scenes = {
 
 function showScene(sceneName) {
 
-    clearTemporaryEvent();
-
-
-    const scene = scenes[sceneName];
+    const scene =
+        scenes[sceneName];
 
 
     if (!scene) {
@@ -2798,6 +2946,9 @@ function showScene(sceneName) {
         return;
 
     }
+
+
+    clearTemporaryEvent();
 
 
     document.getElementById("story").innerHTML =
@@ -2823,9 +2974,6 @@ function showScene(sceneName) {
 
         button.onclick = () => {
 
-            clearTemporaryEvent();
-
-
             const nextScene =
                 choice.action();
 
@@ -2849,9 +2997,6 @@ function showScene(sceneName) {
 
     updateHUD();
 
-
-    // Give the scene time to load before
-    // the house begins reacting.
 
     setTimeout(() => {
 
