@@ -2171,6 +2171,19 @@ function showScene(sceneName) {
 // START GAME
 // ================================
 
+    updateHUD();
+
+    checkSanityEffects();
+
+}
+
+
+// ================================
+// START GAME
+// ================================
+
 updateHUD();
+
+checkSanityEffects();
 
 showScene("start");
