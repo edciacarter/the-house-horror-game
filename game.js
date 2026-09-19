@@ -7,7 +7,7 @@ const gameState = {
 
     health: 100,
 
-    sanity: 100,
+    sanity: 20,
 
     battery: 100,
 
