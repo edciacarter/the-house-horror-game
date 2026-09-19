@@ -1,30 +1,32 @@
 // ================================
 // THE HOUSE
-// GAME SYSTEM
+// CHAPTER ONE
+// HORROR SYSTEM
 // ================================
 
-
-// ================================
-// GAME STATE
-// ================================
 
 const gameState = {
 
     health: 100,
-
     sanity: 100,
-
     battery: 100,
-
     clues: 0,
+    inventory: [],
 
-    inventory: []
+    // Tracks how many scenes the player has visited
+    sceneCount: 0,
+
+    // Tracks whether certain scares already happened
+    scaresSeen: [],
+
+    // Helps the game slowly become more unstable
+    distortionLevel: 0
 
 };
 
 
 // ================================
-// UPDATE HUD
+// HUD
 // ================================
 
 function updateHUD() {
@@ -72,24 +74,18 @@ function updateVisualEffects() {
     const body = document.body;
 
 
-    // ----------------------------
     // SANITY
-    // ----------------------------
+
+    body.classList.remove("insane");
 
     if (gameState.sanity <= 25) {
 
         body.classList.add("insane");
 
-    } else {
-
-        body.classList.remove("insane");
-
     }
 
 
-    // ----------------------------
     // FLASHLIGHT
-    // ----------------------------
 
     body.classList.remove(
         "flashlight-warning",
@@ -100,32 +96,24 @@ function updateVisualEffects() {
 
     if (gameState.battery <= 0) {
 
-        body.classList.add(
-            "flashlight-dead"
-        );
+        body.classList.add("flashlight-dead");
 
     }
 
     else if (gameState.battery <= 25) {
 
-        body.classList.add(
-            "flashlight-critical"
-        );
+        body.classList.add("flashlight-critical");
 
     }
 
     else if (gameState.battery <= 50) {
 
-        body.classList.add(
-            "flashlight-warning"
-        );
+        body.classList.add("flashlight-warning");
 
     }
 
 
-    // ----------------------------
     // HEALTH
-    // ----------------------------
 
     body.classList.remove(
         "health-critical"
@@ -237,6 +225,18 @@ function useBattery(amount) {
 
     updateHUD();
 
+
+    // Very low battery can trigger a scare
+
+    if (
+        gameState.battery <= 25 &&
+        Math.random() < 0.35
+    ) {
+
+        flashlightScare();
+
+    }
+
 }
 
 
@@ -254,7 +254,7 @@ function findClue() {
 
 
 // ================================
-// INVENTORY
+// ITEMS
 // ================================
 
 function addItem(item) {
@@ -290,6 +290,373 @@ function showDeath(message) {
 
 
     document.getElementById("choices").innerHTML = "";
+
+}
+
+
+// ================================
+// FLASHLIGHT SCARE
+// ================================
+
+function flashlightScare() {
+
+    if (
+        gameState.scaresSeen.includes("flashlight")
+    ) {
+
+        return;
+
+    }
+
+
+    gameState.scaresSeen.push("flashlight");
+
+
+    const story =
+        document.getElementById("story");
+
+
+    const original =
+        story.innerHTML;
+
+
+    story.innerHTML = `
+
+        <p>
+            The flashlight flickers.
+        </p>
+
+        <p>
+            For half a second,
+            you see someone standing at the end of the hallway.
+        </p>
+
+        <p>
+            You blink.
+        </p>
+
+        <p>
+            <em>There is nothing there.</em>
+        </p>
+
+    `;
+
+
+    setTimeout(() => {
+
+        story.innerHTML = original;
+
+    }, 2800);
+
+}
+
+
+// ================================
+// RANDOM HORROR EVENT
+// ================================
+
+function randomHorrorEvent() {
+
+    if (gameState.sanity > 60) {
+
+        return;
+
+    }
+
+
+    const events = [
+
+        {
+            id: "whisper",
+
+            text: `
+                <p><em>Someone whispers your name.</em></p>
+            `
+        },
+
+
+        {
+            id: "wrong",
+
+            text: `
+                <p>
+                    For a moment, you forget where you are.
+                </p>
+
+                <p>
+                    You remember being here before.
+                </p>
+            `
+        },
+
+
+        {
+            id: "breathing",
+
+            text: `
+                <p>
+                    You hear breathing.
+                </p>
+
+                <p>
+                    It stops when you stop breathing.
+                </p>
+            `
+        },
+
+
+        {
+            id: "footsteps",
+
+            text: `
+                <p>
+                    Footsteps echo somewhere above you.
+                </p>
+
+                <p>
+                    Then another set answers from below.
+                </p>
+            `
+        }
+
+    ];
+
+
+    const available =
+        events.filter(
+            event =>
+                !gameState.scaresSeen.includes(event.id)
+        );
+
+
+    if (available.length === 0) {
+
+        return;
+
+    }
+
+
+    if (Math.random() > 0.28) {
+
+        return;
+
+    }
+
+
+    const event =
+        available[
+            Math.floor(
+                Math.random() * available.length
+            )
+        ];
+
+
+    gameState.scaresSeen.push(event.id);
+
+
+    const story =
+        document.getElementById("story");
+
+
+    const original =
+        story.innerHTML;
+
+
+    story.innerHTML += `
+
+        <div style="
+            margin-top:25px;
+            color:#777;
+            font-style:italic;
+        ">
+
+            ${event.text}
+
+        </div>
+
+    `;
+
+
+    setTimeout(() => {
+
+        story.innerHTML = original;
+
+    }, 3500);
+
+}
+
+
+// ================================
+// HALLUCINATION
+// ================================
+
+function triggerHallucination() {
+
+    if (gameState.sanity > 35) {
+
+        return;
+
+    }
+
+
+    if (Math.random() > 0.22) {
+
+        return;
+
+    }
+
+
+    const story =
+        document.getElementById("story");
+
+
+    const hallucinations = [
+
+        "DON'T LOOK BEHIND YOU.",
+
+        "YOU HAVE BEEN HERE BEFORE.",
+
+        "IT IS STANDING BEHIND YOU.",
+
+        "WHY DID YOU COME BACK?",
+
+        "YOUR NAME IS WRITTEN ON THE WALL.",
+
+        "THIS IS NOT YOUR FIRST NIGHT HERE."
+
+    ];
+
+
+    const message =
+        hallucinations[
+            Math.floor(
+                Math.random() *
+                hallucinations.length
+            )
+        ];
+
+
+    const original =
+        story.innerHTML;
+
+
+    story.innerHTML = `
+
+        <div style="
+            color:#8b0000;
+            letter-spacing:3px;
+            margin-bottom:20px;
+        ">
+
+            ${message}
+
+        </div>
+
+        ${original}
+
+    `;
+
+
+    setTimeout(() => {
+
+        story.innerHTML = original;
+
+    }, 1800);
+
+}
+
+
+// ================================
+// PHONE DISTURBANCE
+// ================================
+
+function phoneDisturbance() {
+
+    if (gameState.sanity > 45) {
+
+        return;
+
+    }
+
+
+    if (Math.random() > 0.18) {
+
+        return;
+
+    }
+
+
+    const story =
+        document.getElementById("story");
+
+
+    const original =
+        story.innerHTML;
+
+
+    story.innerHTML = `
+
+        <p>
+            Your phone vibrates.
+        </p>
+
+        <p>
+            <em>UNKNOWN NUMBER</em>
+        </p>
+
+        <p>
+            "I CAN SEE YOU."
+        </p>
+
+    `;
+
+
+    setTimeout(() => {
+
+        story.innerHTML = original;
+
+    }, 2500);
+
+}
+
+
+// ================================
+// HORROR CONTROLLER
+// ================================
+
+function runHorrorSystem() {
+
+    gameState.sceneCount++;
+
+
+    // Increase distortion as sanity falls
+
+    if (gameState.sanity <= 60) {
+
+        gameState.distortionLevel = 1;
+
+    }
+
+
+    if (gameState.sanity <= 35) {
+
+        gameState.distortionLevel = 2;
+
+    }
+
+
+    if (gameState.sanity <= 15) {
+
+        gameState.distortionLevel = 3;
+
+    }
+
+
+    randomHorrorEvent();
+
+    triggerHallucination();
+
+    phoneDisturbance();
 
 }
 
@@ -1888,6 +2255,15 @@ function showScene(sceneName) {
 
 
     updateHUD();
+
+
+    // Run horror effects AFTER scene loads
+
+    setTimeout(() => {
+
+        runHorrorSystem();
+
+    }, 350);
 
 }
 
