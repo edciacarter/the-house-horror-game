@@ -1,13 +1,13 @@
-// ================================
+// ============================================================
 // THE HOUSE
 // CHAPTER ONE
-// PHASE 4 — STORY & ENDINGS
-// ================================
+// FINAL GAME.JS
+// ============================================================
 
 
-// ================================
+// ============================================================
 // GAME STATE
-// ================================
+// ============================================================
 
 const gameState = {
 
@@ -46,12 +46,11 @@ const gameState = {
 };
 
 
-// ================================
+// ============================================================
 // TEMPORARY EVENT CONTROL
-// ================================
+// ============================================================
 
 let temporaryEventTimer = null;
-
 
 function clearTemporaryEvent() {
 
@@ -66,37 +65,73 @@ function clearTemporaryEvent() {
 }
 
 
-// ================================
+// ============================================================
 // HUD
-// ================================
+// ============================================================
 
 function updateHUD() {
 
-    document.getElementById("health").textContent =
-        gameState.health;
+    const health =
+        document.getElementById("health");
 
-    document.getElementById("sanity").textContent =
-        gameState.sanity;
+    const sanity =
+        document.getElementById("sanity");
 
-    document.getElementById("battery").textContent =
-        gameState.battery + "%";
+    const battery =
+        document.getElementById("battery");
 
-    document.getElementById("clues").textContent =
-        gameState.clues;
+    const clues =
+        document.getElementById("clues");
 
-
-    const inventoryElement =
+    const inventory =
         document.getElementById("inventory");
 
 
-    if (gameState.inventory.length === 0) {
+    if (health) {
 
-        inventoryElement.textContent = "Empty";
+        health.textContent =
+            gameState.health;
 
-    } else {
+    }
 
-        inventoryElement.textContent =
-            gameState.inventory.join(" • ");
+
+    if (sanity) {
+
+        sanity.textContent =
+            gameState.sanity;
+
+    }
+
+
+    if (battery) {
+
+        battery.textContent =
+            gameState.battery + "%";
+
+    }
+
+
+    if (clues) {
+
+        clues.textContent =
+            gameState.clues;
+
+    }
+
+
+    if (inventory) {
+
+        if (gameState.inventory.length === 0) {
+
+            inventory.textContent =
+                "Empty";
+
+        } else {
+
+            inventory.textContent =
+                gameState.inventory.join(" • ");
+
+        }
 
     }
 
@@ -106,20 +141,33 @@ function updateHUD() {
 }
 
 
-// ================================
+// ============================================================
 // VISUAL EFFECTS
-// ================================
+// ============================================================
 
 function updateVisualEffects() {
 
-    const body = document.body;
+    const body =
+        document.body;
 
 
-    body.classList.remove("insane");
+    if (!body) {
+
+        return;
+
+    }
+
+
+    body.classList.remove(
+        "insane"
+    );
+
 
     if (gameState.sanity <= 25) {
 
-        body.classList.add("insane");
+        body.classList.add(
+            "insane"
+        );
 
     }
 
@@ -133,19 +181,25 @@ function updateVisualEffects() {
 
     if (gameState.battery <= 0) {
 
-        body.classList.add("flashlight-dead");
+        body.classList.add(
+            "flashlight-dead"
+        );
 
     }
 
     else if (gameState.battery <= 25) {
 
-        body.classList.add("flashlight-critical");
+        body.classList.add(
+            "flashlight-critical"
+        );
 
     }
 
     else if (gameState.battery <= 50) {
 
-        body.classList.add("flashlight-warning");
+        body.classList.add(
+            "flashlight-warning"
+        );
 
     }
 
@@ -166,9 +220,9 @@ function updateVisualEffects() {
 }
 
 
-// ================================
+// ============================================================
 // HEALTH
-// ================================
+// ============================================================
 
 function changeHealth(amount) {
 
@@ -204,9 +258,9 @@ function changeHealth(amount) {
 }
 
 
-// ================================
+// ============================================================
 // SANITY
-// ================================
+// ============================================================
 
 function changeSanity(amount) {
 
@@ -242,9 +296,9 @@ function changeSanity(amount) {
 }
 
 
-// ================================
+// ============================================================
 // FLASHLIGHT
-// ================================
+// ============================================================
 
 function useBattery(amount) {
 
@@ -273,9 +327,9 @@ function useBattery(amount) {
 }
 
 
-// ================================
+// ============================================================
 // CLUES
-// ================================
+// ============================================================
 
 function findClue() {
 
@@ -286,13 +340,15 @@ function findClue() {
 }
 
 
-// ================================
+// ============================================================
 // ITEMS
-// ================================
+// ============================================================
 
 function addItem(item) {
 
-    if (!gameState.inventory.includes(item)) {
+    if (
+        !gameState.inventory.includes(item)
+    ) {
 
         gameState.inventory.push(item);
 
@@ -303,41 +359,61 @@ function addItem(item) {
 }
 
 
-// ================================
+// ============================================================
 // DEATH
-// ================================
+// ============================================================
 
 function showDeath(message) {
 
     clearTemporaryEvent();
 
 
-    document.getElementById("story").innerHTML =
+    const story =
+        document.getElementById("story");
 
-        `<div class="death">
+    const choices =
+        document.getElementById("choices");
+
+
+    if (!story || !choices) {
+
+        return;
+
+    }
+
+
+    story.innerHTML = `
+
+        <div class="death">
             YOU DIED
         </div>
 
-        <p>${message}</p>
+        <p>
+            ${message}
+        </p>
 
         <button onclick="location.reload()">
             TRY AGAIN
-        </button>`;
+        </button>
+
+    `;
 
 
-    document.getElementById("choices").innerHTML = "";
+    choices.innerHTML = "";
 
 }
 
 
-// ================================
+// ============================================================
 // FLASHLIGHT SCARE
-// ================================
+// ============================================================
 
 function flashlightScare() {
 
     if (
-        gameState.scaresSeen.includes("flashlight")
+        gameState.scaresSeen.includes(
+            "flashlight"
+        )
     ) {
 
         return;
@@ -345,11 +421,20 @@ function flashlightScare() {
     }
 
 
-    gameState.scaresSeen.push("flashlight");
+    gameState.scaresSeen.push(
+        "flashlight"
+    );
 
 
     const story =
         document.getElementById("story");
+
+
+    if (!story) {
+
+        return;
+
+    }
 
 
     const original =
@@ -381,18 +466,20 @@ function flashlightScare() {
     temporaryEventTimer =
         setTimeout(() => {
 
-            story.innerHTML = original;
+            story.innerHTML =
+                original;
 
-            temporaryEventTimer = null;
+            temporaryEventTimer =
+                null;
 
         }, 2800);
 
 }
 
 
-// ================================
+// ============================================================
 // RANDOM HORROR EVENT
-// ================================
+// ============================================================
 
 function randomHorrorEvent() {
 
@@ -409,7 +496,11 @@ function randomHorrorEvent() {
             id: "whisper",
 
             text: `
-                <p><em>Someone whispers your name.</em></p>
+                <p>
+                    <em>
+                        Someone whispers your name.
+                    </em>
+                </p>
             `
         },
 
@@ -419,7 +510,8 @@ function randomHorrorEvent() {
 
             text: `
                 <p>
-                    For a moment, you forget where you are.
+                    For a moment,
+                    you forget where you are.
                 </p>
 
                 <p>
@@ -464,7 +556,9 @@ function randomHorrorEvent() {
     const available =
         events.filter(
             event =>
-                !gameState.scaresSeen.includes(event.id)
+                !gameState.scaresSeen.includes(
+                    event.id
+                )
         );
 
 
@@ -485,16 +579,26 @@ function randomHorrorEvent() {
     const event =
         available[
             Math.floor(
-                Math.random() * available.length
+                Math.random() *
+                available.length
             )
         ];
 
 
-    gameState.scaresSeen.push(event.id);
+    gameState.scaresSeen.push(
+        event.id
+    );
 
 
     const story =
         document.getElementById("story");
+
+
+    if (!story) {
+
+        return;
+
+    }
 
 
     const original =
@@ -519,18 +623,20 @@ function randomHorrorEvent() {
     temporaryEventTimer =
         setTimeout(() => {
 
-            story.innerHTML = original;
+            story.innerHTML =
+                original;
 
-            temporaryEventTimer = null;
+            temporaryEventTimer =
+                null;
 
         }, 3500);
 
 }
 
 
-// ================================
+// ============================================================
 // HALLUCINATION
-// ================================
+// ============================================================
 
 function triggerHallucination() {
 
@@ -550,6 +656,13 @@ function triggerHallucination() {
 
     const story =
         document.getElementById("story");
+
+
+    if (!story) {
+
+        return;
+
+    }
 
 
     const hallucinations = [
@@ -602,18 +715,20 @@ function triggerHallucination() {
     temporaryEventTimer =
         setTimeout(() => {
 
-            story.innerHTML = original;
+            story.innerHTML =
+                original;
 
-            temporaryEventTimer = null;
+            temporaryEventTimer =
+                null;
 
         }, 1800);
 
 }
 
 
-// ================================
+// ============================================================
 // PHONE DISTURBANCE
-// ================================
+// ============================================================
 
 function phoneDisturbance() {
 
@@ -633,6 +748,13 @@ function phoneDisturbance() {
 
     const story =
         document.getElementById("story");
+
+
+    if (!story) {
+
+        return;
+
+    }
 
 
     const original =
@@ -659,18 +781,20 @@ function phoneDisturbance() {
     temporaryEventTimer =
         setTimeout(() => {
 
-            story.innerHTML = original;
+            story.innerHTML =
+                original;
 
-            temporaryEventTimer = null;
+            temporaryEventTimer =
+                null;
 
         }, 2500);
 
 }
 
 
-// ================================
-// HOUSE REACTIONS
-// ================================
+// ============================================================
+// HOUSE VISITS
+// ============================================================
 
 function trackHouseVisit(sceneName) {
 
@@ -690,30 +814,39 @@ function trackHouseVisit(sceneName) {
     ];
 
 
-    if (houseScenes.includes(sceneName)) {
+    if (
+        houseScenes.includes(
+            sceneName
+        )
+    ) {
 
         gameState.houseVisits++;
 
     }
 
 
-    if (gameState.houseVisits >= 8) {
+    if (
+        gameState.houseVisits >= 8
+    ) {
 
-        gameState.houseAwake = true;
+        gameState.houseAwake =
+            true;
 
     }
 
 }
 
 
-// ================================
+// ============================================================
 // CHANGING ROOMS
-// ================================
+// ============================================================
 
 function getHouseReaction(sceneName) {
 
     if (
-        gameState.changedRooms.includes(sceneName)
+        gameState.changedRooms.includes(
+            sceneName
+        )
     ) {
 
         return "";
@@ -731,6 +864,7 @@ function getHouseReaction(sceneName) {
     const reactions = {
 
         foyer: `
+
             <p>
                 You stop.
             </p>
@@ -742,9 +876,12 @@ function getHouseReaction(sceneName) {
             <p>
                 Now there is only a wall.
             </p>
+
         `,
 
+
         kitchen: `
+
             <p>
                 The drawer you left open is closed.
             </p>
@@ -752,9 +889,12 @@ function getHouseReaction(sceneName) {
             <p>
                 You are certain you left it open.
             </p>
+
         `,
 
+
         hallway: `
+
             <p>
                 You count the doors again.
             </p>
@@ -766,9 +906,12 @@ function getHouseReaction(sceneName) {
             <p>
                 There were only three before.
             </p>
+
         `,
 
+
         bedroom: `
+
             <p>
                 The mattress is indented.
             </p>
@@ -776,9 +919,12 @@ function getHouseReaction(sceneName) {
             <p>
                 Someone—or something—was sitting on the bed.
             </p>
+
         `,
 
+
         bathroom: `
+
             <p>
                 The mirror is covered in fog.
             </p>
@@ -790,9 +936,12 @@ function getHouseReaction(sceneName) {
             <p>
                 <strong>HOME</strong>
             </p>
+
         `,
 
+
         basement: `
+
             <p>
                 The furniture has moved.
             </p>
@@ -800,9 +949,12 @@ function getHouseReaction(sceneName) {
             <p>
                 You know you didn't move it.
             </p>
+
         `,
 
+
         outside: `
+
             <p>
                 The shed door is open.
             </p>
@@ -810,6 +962,7 @@ function getHouseReaction(sceneName) {
             <p>
                 You remember closing it.
             </p>
+
         `
 
     };
@@ -822,7 +975,9 @@ function getHouseReaction(sceneName) {
     }
 
 
-    gameState.changedRooms.push(sceneName);
+    gameState.changedRooms.push(
+        sceneName
+    );
 
 
     return reactions[sceneName];
@@ -830,9 +985,9 @@ function getHouseReaction(sceneName) {
 }
 
 
-// ================================
+// ============================================================
 // ENTITY
-// ================================
+// ============================================================
 
 function entityEncounter(sceneName) {
 
@@ -854,7 +1009,11 @@ function entityEncounter(sceneName) {
     ];
 
 
-    if (!validScenes.includes(sceneName)) {
+    if (
+        !validScenes.includes(
+            sceneName
+        )
+    ) {
 
         return "";
 
@@ -875,7 +1034,8 @@ function entityEncounter(sceneName) {
     }
 
 
-    gameState.entitySeen = true;
+    gameState.entitySeen =
+        true;
 
 
     changeSanity(-5);
@@ -912,9 +1072,9 @@ function entityEncounter(sceneName) {
 }
 
 
-// ================================
+// ============================================================
 // HOUSE WHISPER
-// ================================
+// ============================================================
 
 function houseWhisper() {
 
@@ -926,7 +1086,9 @@ function houseWhisper() {
 
 
     if (
-        gameState.scaresSeen.includes("houseWhisper")
+        gameState.scaresSeen.includes(
+            "houseWhisper"
+        )
     ) {
 
         return "";
@@ -941,7 +1103,9 @@ function houseWhisper() {
     }
 
 
-    gameState.scaresSeen.push("houseWhisper");
+    gameState.scaresSeen.push(
+        "houseWhisper"
+    );
 
 
     return `
@@ -968,32 +1132,49 @@ function houseWhisper() {
 }
 
 
-// ================================
+// ============================================================
 // HOUSE SYSTEM
-// ================================
+// ============================================================
 
 function runHouseSystem(sceneName) {
 
-    trackHouseVisit(sceneName);
+    trackHouseVisit(
+        sceneName
+    );
 
 
     const story =
         document.getElementById("story");
 
 
+    if (!story) {
+
+        return;
+
+    }
+
+
     const reaction =
-        getHouseReaction(sceneName);
+        getHouseReaction(
+            sceneName
+        );
 
 
     const entity =
-        entityEncounter(sceneName);
+        entityEncounter(
+            sceneName
+        );
 
 
     const whisper =
         houseWhisper();
 
 
-    if (reaction || entity || whisper) {
+    if (
+        reaction ||
+        entity ||
+        whisper
+    ) {
 
         story.innerHTML +=
             reaction +
@@ -1005,9 +1186,9 @@ function runHouseSystem(sceneName) {
 }
 
 
-// ================================
+// ============================================================
 // HORROR CONTROLLER
-// ================================
+// ============================================================
 
 function runHorrorSystem(sceneName) {
 
@@ -1016,26 +1197,32 @@ function runHorrorSystem(sceneName) {
 
     if (gameState.sanity <= 60) {
 
-        gameState.distortionLevel = 1;
+        gameState.distortionLevel =
+            1;
 
     }
 
 
     if (gameState.sanity <= 35) {
 
-        gameState.distortionLevel = 2;
+        gameState.distortionLevel =
+            2;
 
     }
 
 
     if (gameState.sanity <= 15) {
 
-        gameState.distortionLevel = 3;
+        gameState.distortionLevel =
+            3;
 
     }
 
 
-    runHouseSystem(sceneName);
+    runHouseSystem(
+        sceneName
+    );
+
 
     randomHorrorEvent();
 
@@ -1046,24 +1233,36 @@ function runHorrorSystem(sceneName) {
 }
 
 
-// ================================
+// ============================================================
 // DETERMINE ENDING
-// ================================
+// ============================================================
 
 function determineEnding() {
 
-    // SECRET / TRUE ENDING
-    //
-    // Player discovered most of the evidence
-    // and reached the hidden passage.
+    // TRUE ENDING
 
     if (
+
         gameState.discoveredSecret &&
+
         gameState.clues >= 5 &&
-        gameState.inventory.includes("Rusty Key") &&
-        gameState.inventory.includes("Photographs") &&
-        gameState.inventory.includes("Child's Drawing") &&
-        gameState.inventory.includes("Old Photograph")
+
+        gameState.inventory.includes(
+            "Rusty Key"
+        ) &&
+
+        gameState.inventory.includes(
+            "Photographs"
+        ) &&
+
+        gameState.inventory.includes(
+            "Child's Drawing"
+        ) &&
+
+        gameState.inventory.includes(
+            "Old Photograph"
+        )
+
     ) {
 
         return "trueEnding";
@@ -1072,10 +1271,10 @@ function determineEnding() {
 
 
     // LOST ENDING
-    //
-    // Sanity has collapsed.
 
-    if (gameState.sanity <= 25) {
+    if (
+        gameState.sanity <= 25
+    ) {
 
         return "lostEnding";
 
@@ -1083,1539 +1282,1939 @@ function determineEnding() {
 
 
     // HOUSE ENDING
-    //
-    // The player escaped physically,
-    // but never uncovered enough of the truth.
 
-    if (gameState.clues <= 2) {
+    if (
+        gameState.clues <= 2
+    ) {
 
         return "houseEnding";
 
     }
 
 
-    // NORMAL SURVIVAL ENDING
+    // NORMAL ENDING
 
     return "ending";
 
 }
 
 
-// ================================
+// ============================================================
 // SCENES
-// ================================
+// ============================================================
 
 const scenes = {
 
-    start: {
 
-        text: `
+// ============================================================
+// START
+// ============================================================
 
-        <p>You wake up in the back seat of your car.</p>
+start: {
 
-        <p>It is <strong>2:13 AM.</strong></p>
+    text: `
 
-        <p>The house sits at the end of the road.</p>
+        <p>
+            You wake up in the back seat of your car.
+        </p>
 
-        <p>Your phone vibrates.</p>
+        <p>
+            It is <strong>2:13 AM.</strong>
+        </p>
 
-        <p><em>"DON'T GO INSIDE."</em></p>
+        <p>
+            The house sits at the end of the road.
+        </p>
 
-        <p>A second message appears.</p>
+        <p>
+            Your phone vibrates.
+        </p>
 
-        <p><em>"PLEASE. IT KNOWS YOU'RE HERE."</em></p>
+        <p>
+            <em>"DON'T GO INSIDE."</em>
+        </p>
 
-        `,
+        <p>
+            A second message appears.
+        </p>
 
-        choices: [
+        <p>
+            <em>
+                "PLEASE. IT KNOWS YOU'RE HERE."
+            </em>
+        </p>
 
-            {
-                text: "A — Call someone",
+    `,
 
-                action: () => {
+    choices: [
 
-                    return "callSomeone";
+        {
+            text:
+                "A — Call someone",
 
-                }
+            action: () => {
 
-            },
-
-
-            {
-                text: "B — Get out of the car",
-
-                action: () => {
-
-                    useBattery(5);
-
-                    return "frontDoor";
-
-                }
-
-            }
-
-        ]
-
-    },
-
-
-    callSomeone: {
-
-        text: `
-
-        <p>You stare at the contact list.</p>
-
-        <p>There is one person you could call.</p>
-
-        <p>Your finger hovers over their name.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Get out of the car",
-
-                action: () => {
-
-                    changeSanity(-10);
-
-                    return "frontDoor";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Stay in the car",
-
-                action: () => {
-
-                    changeSanity(-20);
-
-                    return "car";
-
-                }
+                return "callSomeone";
 
             }
 
-        ]
+        },
 
-    },
+        {
+            text:
+                "B — Get out of the car",
 
+            action: () => {
 
-    car: {
+                useBattery(5);
 
-        text: `
-
-        <p>You lock the doors.</p>
-
-        <p>Something moves behind the house.</p>
-
-        <p>You hear footsteps approaching the car.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Start the car",
-
-                action: () => {
-
-                    return "carEscape";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Look directly at the window",
-
-                action: () => {
-
-                    changeSanity(-35);
-
-                    return "carFace";
-
-                }
+                return "frontDoor";
 
             }
 
-        ]
+        }
 
-    },
+    ]
 
-
-    carEscape: {
-
-        text: `
-
-        <p>The engine starts.</p>
-
-        <p>Your headlights illuminate the road.</p>
-
-        <p>Your phone begins ringing.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Answer the phone",
-
-                action: () => {
-
-                    changeSanity(-15);
-
-                    return "phone";
-
-                }
-
-            },
+},
 
 
-            {
-                text: "B — Ignore it",
+// ============================================================
+// CALL SOMEONE
+// ============================================================
 
-                action: () => {
+callSomeone: {
 
-                    return "road";
+    text: `
 
-                }
+        <p>
+            You stare at the contact list.
+        </p>
 
-            }
+        <p>
+            There is one person you could call.
+        </p>
 
-        ]
+        <p>
+            Your finger hovers over their name.
+        </p>
 
-    },
+    `,
 
+    choices: [
 
-    carFace: {
+        {
+            text:
+                "A — Get out of the car",
 
-        text: `
+            action: () => {
 
-        <p>There is someone standing beside the driver's window.</p>
+                changeSanity(-10);
 
-        <p>You cannot see their face.</p>
-
-        <p>They slowly lean closer.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Close your eyes",
-
-                action: () => {
-
-                    changeSanity(-15);
-
-                    return "frontDoor";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Keep looking",
-
-                action: () => {
-
-                    changeSanity(-60);
-
-                    return "faceDeath";
-
-                }
+                return "frontDoor";
 
             }
 
-        ]
+        },
 
-    },
+        {
+            text:
+                "B — Stay in the car",
 
+            action: () => {
 
-    faceDeath: {
+                changeSanity(-20);
 
-        text: `
-
-        <p>The figure smiles.</p>
-
-        <p>It shouldn't be possible.</p>
-
-        <p>The face stretches across the window.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Run",
-
-                action: () => {
-
-                    showDeath(
-                        "YOU LOOKED TOO LONG."
-                    );
-
-                    return null;
-
-                }
-
-            },
-
-
-            {
-                text: "B — Stay still",
-
-                action: () => {
-
-                    showDeath(
-                        "IT WAS WAITING FOR YOU TO NOTICE IT."
-                    );
-
-                    return null;
-
-                }
+                return "car";
 
             }
 
-        ]
+        }
 
-    },
+    ]
 
-
-    phone: {
-
-        text: `
-
-        <p>You answer.</p>
-
-        <p>For several seconds, nobody speaks.</p>
-
-        <p>Then you hear your own voice whisper:</p>
-
-        <p><em>"Turn around."</em></p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Keep driving",
-
-                action: () => {
-
-                    return "road";
-
-                }
-
-            },
+},
 
 
-            {
-                text: "B — Turn around",
+// ============================================================
+// CAR
+// ============================================================
 
-                action: () => {
+car: {
 
-                    changeSanity(-50);
+    text: `
 
-                    return "phoneDeath";
+        <p>
+            You lock the doors.
+        </p>
 
-                }
+        <p>
+            Something moves behind the house.
+        </p>
+
+        <p>
+            You hear footsteps approaching the car.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Start the car",
+
+            action: () => {
+
+                return "carEscape";
 
             }
 
-        ]
+        },
 
-    },
+        {
+            text:
+                "B — Look directly at the window",
 
+            action: () => {
 
-    phoneDeath: {
+                changeSanity(-35);
 
-        text: `
-
-        <p>You turn around.</p>
-
-        <p>The back seat is occupied.</p>
-
-        <p>Something is sitting directly behind you.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Look at it",
-
-                action: () => {
-
-                    showDeath(
-                        "YOU SHOULD HAVE KEPT DRIVING."
-                    );
-
-                    return null;
-
-                }
-
-            },
-
-
-            {
-                text: "B — Close your eyes",
-
-                action: () => {
-
-                    showDeath(
-                        "IT WAS ALREADY TOO CLOSE."
-                    );
-
-                    return null;
-
-                }
+                return "carFace";
 
             }
 
-        ]
+        }
 
-    },
+    ]
 
-
-    road: {
-
-        text: `
-
-        <p>You continue down the road.</p>
-
-        <p>The house disappears behind you.</p>
-
-        <p>Then you notice something strange.</p>
-
-        <p>The road ahead looks exactly like the road behind you.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Go back to the house",
-
-                action: () => {
-
-                    return "frontDoor";
-
-                }
-
-            },
+},
 
 
-            {
-                text: "B — Keep driving",
+// ============================================================
+// CAR ESCAPE
+// ============================================================
 
-                action: () => {
+carEscape: {
 
-                    changeSanity(-20);
+    text: `
 
-                    return "roadAgain";
+        <p>
+            The engine starts.
+        </p>
 
-                }
+        <p>
+            Your headlights illuminate the road.
+        </p>
+
+        <p>
+            Your phone begins ringing.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Answer the phone",
+
+            action: () => {
+
+                changeSanity(-15);
+
+                return "phone";
 
             }
 
-        ]
+        },
 
-    },
+        {
+            text:
+                "B — Ignore it",
 
+            action: () => {
 
-    roadAgain: {
-
-        text: `
-
-        <p>You keep driving.</p>
-
-        <p>Ten minutes pass.</p>
-
-        <p>The house appears again.</p>
-
-        <p>It is impossible.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Walk toward the house",
-
-                action: () => {
-
-                    useBattery(15);
-
-                    return "frontDoor";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Stay in the car",
-
-                action: () => {
-
-                    changeSanity(-30);
-
-                    return "car";
-
-                }
+                return "road";
 
             }
 
-        ]
+        }
 
-    },
+    ]
 
-
-    frontDoor: {
-
-        text: `
-
-        <p>You stand in front of the house.</p>
-
-        <p>The front door is slightly open.</p>
-
-        <p>You don't remember leaving it that way.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Enter the house",
-
-                action: () => {
-
-                    findClue();
-
-                    return "foyer";
-
-                }
-
-            },
+},
 
 
-            {
-                text: "B — Search around the outside",
+// ============================================================
+// CAR FACE
+// ============================================================
 
-                action: () => {
+carFace: {
 
-                    useBattery(10);
+    text: `
 
-                    return "outside";
+        <p>
+            There is someone standing beside the driver's window.
+        </p>
 
-                }
+        <p>
+            You cannot see their face.
+        </p>
+
+        <p>
+            They slowly lean closer.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Close your eyes",
+
+            action: () => {
+
+                changeSanity(-15);
+
+                return "frontDoor";
 
             }
 
-        ]
+        },
 
-    },
+        {
+            text:
+                "B — Keep looking",
 
+            action: () => {
 
-    outside: {
+                changeSanity(-60);
 
-        text: `
-
-        <p>You walk around the side of the house.</p>
-
-        <p>There is an old wooden shed.</p>
-
-        <p>Something metallic glints inside.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Open the shed",
-
-                action: () => {
-
-                    findClue();
-
-                    addItem("Rusty Key");
-
-                    gameState.exploredShed = true;
-
-                    changeSanity(-5);
-
-                    return "shed";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Go back to the front door",
-
-                action: () => {
-
-                    return "frontDoor";
-
-                }
+                return "faceDeath";
 
             }
 
-        ]
+        }
 
-    },
+    ]
 
-
-    shed: {
-
-        text: `
-
-        <p>The shed smells like wet wood.</p>
-
-        <p>You find several old photographs scattered across the floor.</p>
-
-        <p>Every photograph shows the same house.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Take the photographs",
-
-                action: () => {
-
-                    findClue();
-
-                    addItem("Photographs");
-
-                    gameState.tookPhotographs = true;
-
-                    changeSanity(-10);
-
-                    return "foyer";
-
-                }
-
-            },
+},
 
 
-            {
-                text: "B — Leave the photographs",
+// ============================================================
+// FACE DEATH
+// ============================================================
 
-                action: () => {
+faceDeath: {
 
-                    return "frontDoor";
+    text: `
 
-                }
+        <p>
+            The figure smiles.
+        </p>
+
+        <p>
+            It shouldn't be possible.
+        </p>
+
+        <p>
+            The face stretches across the window.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Run",
+
+            action: () => {
+
+                showDeath(
+                    "YOU LOOKED TOO LONG."
+                );
+
+                return null;
 
             }
 
-        ]
+        },
 
-    },
+        {
+            text:
+                "B — Stay still",
 
+            action: () => {
 
-    foyer: {
+                showDeath(
+                    "IT WAS WAITING FOR YOU TO NOTICE IT."
+                );
 
-        text: `
-
-        <p>You step into the foyer.</p>
-
-        <p>The door closes behind you.</p>
-
-        <p>There are two ways forward.</p>
-
-        <p>The kitchen is to your left.</p>
-
-        <p>A staircase leads upstairs.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Enter the kitchen",
-
-                action: () => {
-
-                    return "kitchen";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Go upstairs",
-
-                action: () => {
-
-                    changeSanity(-5);
-
-                    return "upstairs";
-
-                }
+                return null;
 
             }
 
-        ]
+        }
 
-    },
+    ]
 
-
-    kitchen: {
-
-        text: `
-
-        <p>The kitchen is completely dark.</p>
-
-        <p>You hear something moving inside one of the drawers.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Search the drawers",
-
-                action: () => {
-
-                    addItem("Kitchen Knife");
-
-                    return "kitchenSearch";
-
-                }
-
-            },
+},
 
 
-            {
-                text: "B — Leave the kitchen",
+// ============================================================
+// PHONE
+// ============================================================
 
-                action: () => {
+phone: {
 
-                    return "upstairs";
+    text: `
 
-                }
+        <p>
+            You answer.
+        </p>
 
-            }
+        <p>
+            For several seconds,
+            nobody speaks.
+        </p>
 
-        ]
+        <p>
+            Then you hear your own voice whisper:
+        </p>
 
-    },
+        <p>
+            <em>"Turn around."</em>
+        </p>
 
+    `,
 
-    kitchenSearch: {
+    choices: [
 
-        text: `
+        {
+            text:
+                "A — Keep driving",
 
-        <p>You search through the drawers.</p>
+            action: () => {
 
-        <p>Something scratches the other side of the wall.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Investigate the noise",
-
-                action: () => {
-
-                    changeSanity(-10);
-
-                    return "upstairs";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Search again",
-
-                action: () => {
-
-                    findClue();
-
-                    return "kitchenClue";
-
-                }
+                return "road";
 
             }
 
-        ]
+        },
 
-    },
+        {
+            text:
+                "B — Turn around",
 
+            action: () => {
 
-    kitchenClue: {
+                changeSanity(-50);
 
-        text: `
-
-        <p>You find a child's drawing.</p>
-
-        <p>It shows the house.</p>
-
-        <p>There is a black figure standing behind the family.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Take the drawing",
-
-                action: () => {
-
-                    addItem("Child's Drawing");
-
-                    gameState.tookDrawing = true;
-
-                    findClue();
-
-                    changeSanity(-15);
-
-                    return "upstairs";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Leave it",
-
-                action: () => {
-
-                    return "upstairs";
-
-                }
+                return "phoneDeath";
 
             }
 
-        ]
+        }
 
-    },
+    ]
 
-
-    upstairs: {
-
-        text: `
-
-        <p>You climb the stairs.</p>
-
-        <p>Every step creaks beneath your feet.</p>
-
-        <p>The hallway above is completely dark.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Keep going",
-
-                action: () => {
-
-                    useBattery(10);
-
-                    return "hallway";
-
-                }
-
-            },
+},
 
 
-            {
-                text: "B — Go back downstairs",
+// ============================================================
+// PHONE DEATH
+// ============================================================
 
-                action: () => {
+phoneDeath: {
 
-                    changeSanity(-5);
+    text: `
 
-                    return "foyer";
+        <p>
+            You turn around.
+        </p>
 
-                }
+        <p>
+            The back seat is occupied.
+        </p>
 
-            }
+        <p>
+            Something is sitting directly behind you.
+        </p>
 
-        ]
+    `,
 
-    },
+    choices: [
 
+        {
+            text:
+                "A — Look at it",
 
-    hallway: {
+            action: () => {
 
-        text: `
+                showDeath(
+                    "YOU SHOULD HAVE KEPT DRIVING."
+                );
 
-        <p>The hallway stretches farther than it should.</p>
-
-        <p>There are several doors.</p>
-
-        <p>One of them is locked.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Enter the bedroom",
-
-                action: () => {
-
-                    return "bedroom";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Try the locked door",
-
-                action: () => {
-
-                    if (
-                        gameState.inventory.includes("Rusty Key")
-                    ) {
-
-                        gameState.openedLockedRoom = true;
-
-                        return "lockedRoom";
-
-                    }
-
-                    changeSanity(-10);
-
-                    return "locked";
-
-                }
+                return null;
 
             }
 
-        ]
+        },
 
-    },
+        {
+            text:
+                "B — Close your eyes",
 
+            action: () => {
 
-    bedroom: {
+                showDeath(
+                    "IT WAS ALREADY TOO CLOSE."
+                );
 
-        text: `
-
-        <p>The bedroom looks untouched.</p>
-
-        <p>An old photograph sits on the dresser.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Examine the photograph",
-
-                action: () => {
-
-                    findClue();
-
-                    addItem("Old Photograph");
-
-                    gameState.examinedBedroomPhoto = true;
-
-                    changeSanity(-10);
-
-                    return "bedroomPhoto";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Put it down",
-
-                action: () => {
-
-                    return "hallway";
-
-                }
+                return null;
 
             }
 
-        ]
+        }
 
-    },
+    ]
 
-
-    bedroomPhoto: {
-
-        text: `
-
-        <p>The photograph shows you standing in this room.</p>
-
-        <p>But the photograph looks decades old.</p>
-
-        <p>Something moves behind you.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Turn around",
-
-                action: () => {
-
-                    changeSanity(-30);
-
-                    return "hallway";
-
-                }
-
-            },
+},
 
 
-            {
-                text: "B — Run",
+// ============================================================
+// ROAD
+// ============================================================
 
-                action: () => {
+road: {
 
-                    return "run";
+    text: `
 
-                }
+        <p>
+            You continue down the road.
+        </p>
 
-            }
+        <p>
+            The house disappears behind you.
+        </p>
 
-        ]
+        <p>
+            Then you notice something strange.
+        </p>
 
-    },
+        <p>
+            The road ahead looks exactly like the road behind you.
+        </p>
 
+    `,
 
-    run: {
+    choices: [
 
-        text: `
+        {
+            text:
+                "A — Go back to the house",
 
-        <p>You sprint into the hallway.</p>
+            action: () => {
 
-        <p>You hear footsteps following you.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Run downstairs",
-
-                action: () => {
-
-                    changeHealth(-20);
-
-                    return "foyer";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Hide in the bathroom",
-
-                action: () => {
-
-                    changeSanity(-20);
-
-                    return "bathroom";
-
-                }
+                return "frontDoor";
 
             }
 
-        ]
+        },
 
-    },
+        {
+            text:
+                "B — Keep driving",
 
+            action: () => {
 
-    bathroom: {
+                changeSanity(-20);
 
-        text: `
-
-        <p>You lock yourself inside the bathroom.</p>
-
-        <p>The footsteps stop outside the door.</p>
-
-        <p>Someone whispers your name.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Stay silent",
-
-                action: () => {
-
-                    changeSanity(-10);
-
-                    return "bathroomWait";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Open the door",
-
-                action: () => {
-
-                    showDeath(
-                        "THE DOOR WAS NEVER LOCKED."
-                    );
-
-                    return null;
-
-                }
+                return "roadAgain";
 
             }
 
-        ]
+        }
 
-    },
+    ]
 
-
-    bathroomWait: {
-
-        text: `
-
-        <p>The footsteps slowly disappear.</p>
-
-        <p>You wait another minute before leaving.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Return to the hallway",
-
-                action: () => {
-
-                    return "hallway";
-
-                }
-
-            },
+},
 
 
-            {
-                text: "B — Go back to the foyer",
+// ============================================================
+// ROAD AGAIN
+// ============================================================
 
-                action: () => {
+roadAgain: {
 
-                    return "foyer";
+    text: `
 
-                }
+        <p>
+            You keep driving.
+        </p>
 
-            }
+        <p>
+            Ten minutes pass.
+        </p>
 
-        ]
+        <p>
+            The house appears again.
+        </p>
 
-    },
+        <p>
+            It is impossible.
+        </p>
 
+    `,
 
-    lockedRoom: {
+    choices: [
 
-        text: `
+        {
+            text:
+                "A — Walk toward the house",
 
-        <p>The rusty key fits.</p>
+            action: () => {
 
-        <p>The door opens into a room that shouldn't exist.</p>
+                useBattery(15);
 
-        <p>Photographs cover every wall.</p>
-
-        <p>Every photograph is of you.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Search the room",
-
-                action: () => {
-
-                    findClue();
-
-                    changeSanity(-20);
-
-                    return "basementDoor";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Leave immediately",
-
-                action: () => {
-
-                    return "hallway";
-
-                }
+                return "frontDoor";
 
             }
 
-        ]
+        },
 
-    },
+        {
+            text:
+                "B — Stay in the car",
 
+            action: () => {
 
-    locked: {
+                changeSanity(-30);
 
-        text: `
-
-        <p>The door won't open.</p>
-
-        <p>Something is moving behind it.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Search the house",
-
-                action: () => {
-
-                    return "basementDoor";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Keep pulling the door",
-
-                action: () => {
-
-                    changeHealth(-10);
-
-                    changeSanity(-10);
-
-                    return "locked";
-
-                }
+                return "car";
 
             }
 
-        ]
+        }
 
-    },
+    ]
 
-
-    basementDoor: {
-
-        text: `
-
-        <p>You discover a door leading downstairs.</p>
-
-        <p>Cold air rises from the darkness.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Go downstairs",
-
-                action: () => {
-
-                    useBattery(20);
-
-                    return "basement";
-
-                }
-
-            },
+},
 
 
-            {
-                text: "B — Return to the hallway",
+// ============================================================
+// FRONT DOOR
+// ============================================================
 
-                action: () => {
+frontDoor: {
 
-                    return "hallway";
+    text: `
 
-                }
+        <p>
+            You stand in front of the house.
+        </p>
 
-            }
+        <p>
+            The front door is slightly open.
+        </p>
 
-        ]
+        <p>
+            You don't remember leaving it that way.
+        </p>
 
-    },
+    `,
 
+    choices: [
 
-    basement: {
+        {
+            text:
+                "A — Enter the house",
 
-        text: `
+            action: () => {
 
-        <p>The basement is filled with old furniture.</p>
+                findClue();
 
-        <p>A wooden box sits in the corner.</p>
-
-        <p>Something inside it is scratching.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Open the box",
-
-                action: () => {
-
-                    findClue();
-
-                    gameState.searchedBasement = true;
-
-                    return "box";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Return upstairs",
-
-                action: () => {
-
-                    return "hallway";
-
-                }
+                return "foyer";
 
             }
 
-        ]
+        },
 
-    },
+        {
+            text:
+                "B — Search around the outside",
 
+            action: () => {
 
-    box: {
+                useBattery(10);
 
-        text: `
-
-        <p>Inside the box you find dozens of photographs.</p>
-
-        <p>The newest photograph was taken tonight.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Search deeper",
-
-                action: () => {
-
-                    findClue();
-
-                    changeSanity(-20);
-
-                    return "secret";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Leave the box",
-
-                action: () => {
-
-                    return "escape";
-
-                }
+                return "outside";
 
             }
 
-        ]
+        }
 
-    },
+    ]
 
-
-    secret: {
-
-        text: `
-
-        <p>You discover a hidden passage.</p>
-
-        <p>The walls are covered in writing.</p>
-
-        <p>Your name appears again and again.</p>
-
-        <p>At the end of the passage, someone is standing with their back toward you.</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Turn around",
-
-                action: () => {
-
-                    gameState.discoveredSecret = true;
-
-                    gameState.confrontedFigure = true;
-
-                    changeSanity(-40);
-
-                    return "finalReveal";
-
-                }
-
-            },
+},
 
 
-            {
-                text: "B — Escape",
+// ============================================================
+// OUTSIDE
+// ============================================================
 
-                action: () => {
+outside: {
 
-                    gameState.discoveredSecret = true;
+    text: `
 
-                    return "escape";
+        <p>
+            You walk around the side of the house.
+        </p>
 
-                }
+        <p>
+            There is an old wooden shed.
+        </p>
 
-            }
+        <p>
+            Something metallic glints inside.
+        </p>
 
-        ]
+    `,
 
-    },
+    choices: [
 
+        {
+            text:
+                "A — Open the shed",
 
-    finalReveal: {
+            action: () => {
 
-        text: `
+                findClue();
 
-        <p>The figure turns.</p>
+                addItem(
+                    "Rusty Key"
+                );
 
-        <p>It has your face.</p>
+                gameState.exploredShed =
+                    true;
 
-        <p>It smiles.</p>
+                changeSanity(-5);
 
-        <p>"You finally came home."</p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Run",
-
-                action: () => {
-
-                    changeHealth(-30);
-
-                    return "escape";
-
-                }
-
-            },
-
-
-            {
-                text: "B — Stay",
-
-                action: () => {
-
-                    gameState.sanity = 0;
-
-                    updateHUD();
-
-                    showDeath(
-                        "YOU WERE NEVER THE ONE ESCAPING."
-                    );
-
-                    return null;
-
-                }
+                return "shed";
 
             }
 
-        ]
+        },
 
-    },
+        {
+            text:
+                "B — Go back to the front door",
 
+            action: () => {
 
-    escape: {
-
-        text: `
-
-        <p>You run through the front door.</p>
-
-        <p>The night air hits your face.</p>
-
-        <p>Your phone vibrates.</p>
-
-        <p>There is one final message.</p>
-
-        <p><em>"YOU NEVER LEFT."</em></p>
-
-        `,
-
-        choices: [
-
-            {
-                text: "A — Look at the message",
-
-                action: () => {
-
-                    return determineEnding();
-
-                }
-
-            },
-
-
-            {
-                text: "B — Throw the phone away",
-
-                action: () => {
-
-                    return determineEnding();
-
-                }
+                return "frontDoor";
 
             }
 
-        ]
+        }
 
-    },
+    ]
+
+},
 
 
-    // ================================
-    // NORMAL ENDING
-    // ================================
+// ============================================================
+// SHED
+// ============================================================
 
-    ending: {
+shed: {
 
-        text: `
+    text: `
+
+        <p>
+            The shed smells like wet wood.
+        </p>
+
+        <p>
+            You find several old photographs
+            scattered across the floor.
+        </p>
+
+        <p>
+            Every photograph shows the same house.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Take the photographs",
+
+            action: () => {
+
+                findClue();
+
+                addItem(
+                    "Photographs"
+                );
+
+                gameState.tookPhotographs =
+                    true;
+
+                changeSanity(-10);
+
+                return "foyer";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Leave the photographs",
+
+            action: () => {
+
+                return "frontDoor";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// FOYER
+// ============================================================
+
+foyer: {
+
+    text: `
+
+        <p>
+            You step into the foyer.
+        </p>
+
+        <p>
+            The door closes behind you.
+        </p>
+
+        <p>
+            There are two ways forward.
+        </p>
+
+        <p>
+            The kitchen is to your left.
+        </p>
+
+        <p>
+            A staircase leads upstairs.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Enter the kitchen",
+
+            action: () => {
+
+                return "kitchen";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Go upstairs",
+
+            action: () => {
+
+                changeSanity(-5);
+
+                return "upstairs";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// KITCHEN
+// ============================================================
+
+kitchen: {
+
+    text: `
+
+        <p>
+            The kitchen is completely dark.
+        </p>
+
+        <p>
+            You hear something moving
+            inside one of the drawers.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Search the drawers",
+
+            action: () => {
+
+                addItem(
+                    "Kitchen Knife"
+                );
+
+                return "kitchenSearch";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Leave the kitchen",
+
+            action: () => {
+
+                return "upstairs";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// KITCHEN SEARCH
+// ============================================================
+
+kitchenSearch: {
+
+    text: `
+
+        <p>
+            You search through the drawers.
+        </p>
+
+        <p>
+            Something scratches the other side
+            of the wall.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Investigate the noise",
+
+            action: () => {
+
+                changeSanity(-10);
+
+                return "upstairs";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Search again",
+
+            action: () => {
+
+                findClue();
+
+                return "kitchenClue";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// KITCHEN CLUE
+// ============================================================
+
+kitchenClue: {
+
+    text: `
+
+        <p>
+            You find a child's drawing.
+        </p>
+
+        <p>
+            It shows the house.
+        </p>
+
+        <p>
+            There is a black figure standing
+            behind the family.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Take the drawing",
+
+            action: () => {
+
+                addItem(
+                    "Child's Drawing"
+                );
+
+                gameState.tookDrawing =
+                    true;
+
+                findClue();
+
+                changeSanity(-15);
+
+                return "upstairs";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Leave it",
+
+            action: () => {
+
+                return "upstairs";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// UPSTAIRS
+// ============================================================
+
+upstairs: {
+
+    text: `
+
+        <p>
+            You climb the stairs.
+        </p>
+
+        <p>
+            Every step creaks beneath your feet.
+        </p>
+
+        <p>
+            The hallway above is completely dark.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Keep going",
+
+            action: () => {
+
+                useBattery(10);
+
+                return "hallway";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Go back downstairs",
+
+            action: () => {
+
+                changeSanity(-5);
+
+                return "foyer";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// HALLWAY
+// ============================================================
+
+hallway: {
+
+    text: `
+
+        <p>
+            The hallway stretches farther than it should.
+        </p>
+
+        <p>
+            There are several doors.
+        </p>
+
+        <p>
+            One of them is locked.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Enter the bedroom",
+
+            action: () => {
+
+                return "bedroom";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Try the locked door",
+
+            action: () => {
+
+                if (
+                    gameState.inventory.includes(
+                        "Rusty Key"
+                    )
+                ) {
+
+                    gameState.openedLockedRoom =
+                        true;
+
+                    return "lockedRoom";
+
+                }
+
+
+                changeSanity(-10);
+
+                return "locked";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// BEDROOM
+// ============================================================
+
+bedroom: {
+
+    text: `
+
+        <p>
+            The bedroom looks untouched.
+        </p>
+
+        <p>
+            An old photograph sits on the dresser.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Examine the photograph",
+
+            action: () => {
+
+                findClue();
+
+                addItem(
+                    "Old Photograph"
+                );
+
+                gameState.examinedBedroomPhoto =
+                    true;
+
+                changeSanity(-10);
+
+                return "bedroomPhoto";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Put it down",
+
+            action: () => {
+
+                return "hallway";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// BEDROOM PHOTO
+// ============================================================
+
+bedroomPhoto: {
+
+    text: `
+
+        <p>
+            The photograph shows you
+            standing in this room.
+        </p>
+
+        <p>
+            But the photograph looks decades old.
+        </p>
+
+        <p>
+            Something moves behind you.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Turn around",
+
+            action: () => {
+
+                changeSanity(-30);
+
+                return "hallway";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Run",
+
+            action: () => {
+
+                return "run";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// RUN
+// ============================================================
+
+run: {
+
+    text: `
+
+        <p>
+            You sprint into the hallway.
+        </p>
+
+        <p>
+            You hear footsteps following you.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Run downstairs",
+
+            action: () => {
+
+                changeHealth(-20);
+
+                return "foyer";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Hide in the bathroom",
+
+            action: () => {
+
+                changeSanity(-20);
+
+                return "bathroom";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// BATHROOM
+// ============================================================
+
+bathroom: {
+
+    text: `
+
+        <p>
+            You lock yourself inside the bathroom.
+        </p>
+
+        <p>
+            The footsteps stop outside the door.
+        </p>
+
+        <p>
+            Someone whispers your name.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Stay silent",
+
+            action: () => {
+
+                changeSanity(-10);
+
+                return "bathroomWait";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Open the door",
+
+            action: () => {
+
+                showDeath(
+                    "THE DOOR WAS NEVER LOCKED."
+                );
+
+                return null;
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// BATHROOM WAIT
+// ============================================================
+
+bathroomWait: {
+
+    text: `
+
+        <p>
+            The footsteps slowly disappear.
+        </p>
+
+        <p>
+            You wait another minute before leaving.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Return to the hallway",
+
+            action: () => {
+
+                return "hallway";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Go back to the foyer",
+
+            action: () => {
+
+                return "foyer";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// LOCKED ROOM
+// ============================================================
+
+lockedRoom: {
+
+    text: `
+
+        <p>
+            The rusty key fits.
+        </p>
+
+        <p>
+            The door opens into a room
+            that shouldn't exist.
+        </p>
+
+        <p>
+            Photographs cover every wall.
+        </p>
+
+        <p>
+            Every photograph is of you.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Search the room",
+
+            action: () => {
+
+                findClue();
+
+                changeSanity(-20);
+
+                return "basementDoor";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Leave immediately",
+
+            action: () => {
+
+                return "hallway";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// LOCKED
+// ============================================================
+
+locked: {
+
+    text: `
+
+        <p>
+            The door won't open.
+        </p>
+
+        <p>
+            Something is moving behind it.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Search the house",
+
+            action: () => {
+
+                return "basementDoor";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Keep pulling the door",
+
+            action: () => {
+
+                changeHealth(-10);
+
+                changeSanity(-10);
+
+                return "locked";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// BASEMENT DOOR
+// ============================================================
+
+basementDoor: {
+
+    text: `
+
+        <p>
+            You discover a door leading downstairs.
+        </p>
+
+        <p>
+            Cold air rises from the darkness.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Go downstairs",
+
+            action: () => {
+
+                useBattery(20);
+
+                return "basement";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Return to the hallway",
+
+            action: () => {
+
+                return "hallway";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// BASEMENT
+// ============================================================
+
+basement: {
+
+    text: `
+
+        <p>
+            The basement is filled with old furniture.
+        </p>
+
+        <p>
+            A wooden box sits in the corner.
+        </p>
+
+        <p>
+            Something inside it is scratching.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Open the box",
+
+            action: () => {
+
+                findClue();
+
+                gameState.searchedBasement =
+                    true;
+
+                return "box";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Return upstairs",
+
+            action: () => {
+
+                return "hallway";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// BOX
+// ============================================================
+
+box: {
+
+    text: `
+
+        <p>
+            Inside the box you find dozens
+            of photographs.
+        </p>
+
+        <p>
+            The newest photograph was taken tonight.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Search deeper",
+
+            action: () => {
+
+                findClue();
+
+                changeSanity(-20);
+
+                return "secret";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Leave the box",
+
+            action: () => {
+
+                return "escape";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// SECRET
+// ============================================================
+
+secret: {
+
+    text: `
+
+        <p>
+            You discover a hidden passage.
+        </p>
+
+        <p>
+            The walls are covered in writing.
+        </p>
+
+        <p>
+            Your name appears again and again.
+        </p>
+
+        <p>
+            At the end of the passage,
+            someone is standing with their back toward you.
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Turn around",
+
+            action: () => {
+
+                gameState.discoveredSecret =
+                    true;
+
+                gameState.confrontedFigure =
+                    true;
+
+                changeSanity(-40);
+
+                return "finalReveal";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Escape",
+
+            action: () => {
+
+                gameState.discoveredSecret =
+                    true;
+
+                return "escape";
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// FINAL REVEAL
+// ============================================================
+
+finalReveal: {
+
+    text: `
+
+        <p>
+            The figure turns.
+        </p>
+
+        <p>
+            It has your face.
+        </p>
+
+        <p>
+            It smiles.
+        </p>
+
+        <p>
+            "You finally came home."
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Run",
+
+            action: () => {
+
+                changeHealth(-30);
+
+                return "escape";
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Stay",
+
+            action: () => {
+
+                gameState.sanity =
+                    0;
+
+                updateHUD();
+
+                showDeath(
+                    "YOU WERE NEVER THE ONE ESCAPING."
+                );
+
+                return null;
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// ESCAPE
+// ============================================================
+
+escape: {
+
+    text: `
+
+        <p>
+            You run through the front door.
+        </p>
+
+        <p>
+            The night air hits your face.
+        </p>
+
+        <p>
+            Your phone vibrates.
+        </p>
+
+        <p>
+            There is one final message.
+        </p>
+
+        <p>
+            <em>
+                "YOU NEVER LEFT."
+            </em>
+        </p>
+
+    `,
+
+    choices: [
+
+        {
+            text:
+                "A — Look at the message",
+
+            action: () => {
+
+                return determineEnding();
+
+            }
+
+        },
+
+        {
+            text:
+                "B — Throw the phone away",
+
+            action: () => {
+
+                return determineEnding();
+
+            }
+
+        }
+
+    ]
+
+},
+
+
+// ============================================================
+// NORMAL ENDING
+// ============================================================
+
+ending: {
+
+    text: `
 
         <div class="death">
             YOU ESCAPED
@@ -2652,35 +3251,36 @@ const scenes = {
             CHAPTER ONE COMPLETE.
         </p>
 
-        `,
+    `,
 
-        choices: [
+    choices: [
 
-            {
-                text: "PLAY AGAIN",
+        {
+            text:
+                "PLAY AGAIN",
 
-                action: () => {
+            action: () => {
 
-                    location.reload();
+                location.reload();
 
-                    return null;
-
-                }
+                return null;
 
             }
 
-        ]
+        }
 
-    },
+    ]
+
+},
 
 
-    // ================================
-    // HOUSE ENDING
-    // ================================
+// ============================================================
+// HOUSE ENDING
+// ============================================================
 
-    houseEnding: {
+houseEnding: {
 
-        text: `
+    text: `
 
         <div class="death">
             THE HOUSE LET YOU GO
@@ -2691,7 +3291,8 @@ const scenes = {
         </p>
 
         <p>
-            But you never discovered why the house wanted you there.
+            But you never discovered why
+            the house wanted you there.
         </p>
 
         <p>
@@ -2704,7 +3305,8 @@ const scenes = {
         </p>
 
         <p>
-            Someone is watching from the upstairs window.
+            Someone is watching from
+            the upstairs window.
         </p>
 
         <p>
@@ -2715,35 +3317,36 @@ const scenes = {
             CHAPTER ONE COMPLETE.
         </p>
 
-        `,
+    `,
 
-        choices: [
+    choices: [
 
-            {
-                text: "PLAY AGAIN",
+        {
+            text:
+                "PLAY AGAIN",
 
-                action: () => {
+            action: () => {
 
-                    location.reload();
+                location.reload();
 
-                    return null;
-
-                }
+                return null;
 
             }
 
-        ]
+        }
 
-    },
+    ]
+
+},
 
 
-    // ================================
-    // LOST ENDING
-    // ================================
+// ============================================================
+// LOST ENDING
+// ============================================================
 
-    lostEnding: {
+lostEnding: {
 
-        text: `
+    text: `
 
         <div class="death">
             YOU BROKE
@@ -2783,35 +3386,36 @@ const scenes = {
             CHAPTER ONE COMPLETE.
         </p>
 
-        `,
+    `,
 
-        choices: [
+    choices: [
 
-            {
-                text: "PLAY AGAIN",
+        {
+            text:
+                "PLAY AGAIN",
 
-                action: () => {
+            action: () => {
 
-                    location.reload();
+                location.reload();
 
-                    return null;
-
-                }
+                return null;
 
             }
 
-        ]
+        }
 
-    },
+    ]
+
+},
 
 
-    // ================================
-    // TRUE ENDING
-    // ================================
+// ============================================================
+// TRUE ENDING
+// ============================================================
 
-    trueEnding: {
+trueEnding: {
 
-        text: `
+    text: `
 
         <div class="death">
             THE TRUTH
@@ -2902,33 +3506,34 @@ const scenes = {
             CHAPTER ONE COMPLETE.
         </p>
 
-        `,
+    `,
 
-        choices: [
+    choices: [
 
-            {
-                text: "PLAY AGAIN",
+        {
+            text:
+                "PLAY AGAIN",
 
-                action: () => {
+            action: () => {
 
-                    location.reload();
+                location.reload();
 
-                    return null;
-
-                }
+                return null;
 
             }
 
-        ]
+        }
 
-    }
+    ]
+
+}
 
 };
 
 
-// ================================
+// ============================================================
 // SHOW SCENE
-// ================================
+// ============================================================
 
 function showScene(sceneName) {
 
@@ -2951,48 +3556,67 @@ function showScene(sceneName) {
     clearTemporaryEvent();
 
 
-    document.getElementById("story").innerHTML =
-        scene.text;
+    const story =
+        document.getElementById("story");
 
-
-    const choicesElement =
+    const choices =
         document.getElementById("choices");
 
 
-    choicesElement.innerHTML = "";
+    if (!story || !choices) {
+
+        return;
+
+    }
 
 
-    scene.choices.forEach(choice => {
-
-        const button =
-            document.createElement("button");
+    story.innerHTML =
+        scene.text;
 
 
-        button.textContent =
-            choice.text;
+    choices.innerHTML =
+        "";
 
 
-        button.onclick = () => {
+    scene.choices.forEach(
+        choice => {
 
-            const nextScene =
-                choice.action();
-
-
-            updateHUD();
-
-
-            if (nextScene) {
-
-                showScene(nextScene);
-
-            }
-
-        };
+            const button =
+                document.createElement(
+                    "button"
+                );
 
 
-        choicesElement.appendChild(button);
+            button.textContent =
+                choice.text;
 
-    });
+
+            button.onclick = () => {
+
+                const nextScene =
+                    choice.action();
+
+
+                updateHUD();
+
+
+                if (nextScene) {
+
+                    showScene(
+                        nextScene
+                    );
+
+                }
+
+            };
+
+
+            choices.appendChild(
+                button
+            );
+
+        }
+    );
 
 
     updateHUD();
@@ -3000,17 +3624,216 @@ function showScene(sceneName) {
 
     setTimeout(() => {
 
-        runHorrorSystem(sceneName);
+        runHorrorSystem(
+            sceneName
+        );
 
     }, 350);
 
 }
 
 
-// ================================
-// START GAME
-// ================================
+// ============================================================
+// AUDIO
+// ============================================================
 
-updateHUD();
+let audioContext = null;
+let ambientGain = null;
+let ambientStarted = false;
 
-showScene("start");
+
+function startAmbientSound() {
+
+    if (ambientStarted) {
+
+        return;
+
+    }
+
+
+    try {
+
+        audioContext =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+
+        if (
+            audioContext.state ===
+            "suspended"
+        ) {
+
+            audioContext.resume();
+
+        }
+
+
+        const oscillator =
+            audioContext.createOscillator();
+
+
+        ambientGain =
+            audioContext.createGain();
+
+
+        oscillator.type =
+            "sine";
+
+
+        oscillator.frequency.value =
+            42;
+
+
+        ambientGain.gain.value =
+            0.018;
+
+
+        oscillator.connect(
+            ambientGain
+        );
+
+
+        ambientGain.connect(
+            audioContext.destination
+        );
+
+
+        oscillator.start();
+
+
+        ambientStarted =
+            true;
+
+
+        setInterval(() => {
+
+            if (
+                !ambientGain ||
+                !audioContext
+            ) {
+
+                return;
+
+            }
+
+
+            const variation =
+                0.012 +
+                Math.random() *
+                0.018;
+
+
+            ambientGain.gain.setTargetAtTime(
+
+                variation,
+
+                audioContext.currentTime,
+
+                1.5
+
+            );
+
+        }, 3500);
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Ambient audio unavailable."
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// TITLE SCREEN
+// ============================================================
+
+function startGame() {
+
+    startAmbientSound();
+
+
+    const titleScreen =
+        document.getElementById(
+            "titleScreen"
+        );
+
+
+    const game =
+        document.getElementById(
+            "game"
+        );
+
+
+    if (!titleScreen) {
+
+        return;
+
+    }
+
+
+    titleScreen.style.transition =
+        "opacity 1.2s ease";
+
+
+    titleScreen.style.opacity =
+        "0";
+
+
+    setTimeout(() => {
+
+        titleScreen.style.display =
+            "none";
+
+
+        if (game) {
+
+            game.style.opacity =
+                "1";
+
+        }
+
+    }, 1200);
+
+}
+
+
+// ============================================================
+// INITIALIZE
+// ============================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const startButton =
+            document.getElementById(
+                "startButton"
+            );
+
+
+        if (startButton) {
+
+            startButton.addEventListener(
+                "click",
+                startGame
+            );
+
+        }
+
+
+        updateHUD();
+
+
+        showScene(
+            "start"
+        );
+
+    }
+);
