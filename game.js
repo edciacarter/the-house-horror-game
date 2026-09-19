@@ -4,6 +4,10 @@
 // ================================
 
 
+// ================================
+// GAME STATE
+// ================================
+
 const gameState = {
 
     health: 100,
@@ -50,6 +54,89 @@ function updateHUD() {
 
         inventoryElement.textContent =
             gameState.inventory.join(" • ");
+
+    }
+
+
+    updateVisualEffects();
+
+}
+
+
+// ================================
+// VISUAL EFFECTS
+// ================================
+
+function updateVisualEffects() {
+
+    const body = document.body;
+
+
+    // ----------------------------
+    // SANITY
+    // ----------------------------
+
+    if (gameState.sanity <= 25) {
+
+        body.classList.add("insane");
+
+    } else {
+
+        body.classList.remove("insane");
+
+    }
+
+
+    // ----------------------------
+    // FLASHLIGHT
+    // ----------------------------
+
+    body.classList.remove(
+        "flashlight-warning",
+        "flashlight-critical",
+        "flashlight-dead"
+    );
+
+
+    if (gameState.battery <= 0) {
+
+        body.classList.add(
+            "flashlight-dead"
+        );
+
+    }
+
+    else if (gameState.battery <= 25) {
+
+        body.classList.add(
+            "flashlight-critical"
+        );
+
+    }
+
+    else if (gameState.battery <= 50) {
+
+        body.classList.add(
+            "flashlight-warning"
+        );
+
+    }
+
+
+    // ----------------------------
+    // HEALTH
+    // ----------------------------
+
+    body.classList.remove(
+        "health-critical"
+    );
+
+
+    if (gameState.health <= 25) {
+
+        body.classList.add(
+            "health-critical"
+        );
 
     }
 
@@ -127,15 +214,13 @@ function changeSanity(amount) {
 
     updateHUD();
 
-    checkSanityEffects();
-
     return true;
 
 }
 
 
 // ================================
-// BATTERY
+// FLASHLIGHT
 // ================================
 
 function useBattery(amount) {
@@ -169,7 +254,7 @@ function findClue() {
 
 
 // ================================
-// ITEMS
+// INVENTORY
 // ================================
 
 function addItem(item) {
@@ -210,25 +295,6 @@ function showDeath(message) {
 
 
 // ================================
-// LOW SANITY EFFECT
-// ================================
-
-function checkSanityEffects() {
-
-    if (gameState.sanity <= 25) {
-
-        document.body.classList.add("insane");
-
-    } else {
-
-        document.body.classList.remove("insane");
-
-    }
-
-}
-
-
-// ================================
 // SCENES
 // ================================
 
@@ -257,7 +323,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Call someone",
 
                 action: () => {
@@ -270,7 +335,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Get out of the car",
 
                 action: () => {
@@ -303,7 +367,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Get out of the car",
 
                 action: () => {
@@ -318,7 +381,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Stay in the car",
 
                 action: () => {
@@ -351,7 +413,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Start the car",
 
                 action: () => {
@@ -364,7 +425,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Look directly at the window",
 
                 action: () => {
@@ -397,7 +457,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Answer the phone",
 
                 action: () => {
@@ -412,7 +471,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Ignore it",
 
                 action: () => {
@@ -443,7 +501,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Close your eyes",
 
                 action: () => {
@@ -458,7 +515,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Keep looking",
 
                 action: () => {
@@ -491,7 +547,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Run",
 
                 action: () => {
@@ -508,7 +563,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Stay still",
 
                 action: () => {
@@ -545,7 +599,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Keep driving",
 
                 action: () => {
@@ -558,7 +611,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Turn around",
 
                 action: () => {
@@ -591,7 +643,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Look at it",
 
                 action: () => {
@@ -608,7 +659,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Close your eyes",
 
                 action: () => {
@@ -645,7 +695,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Go back to the house",
 
                 action: () => {
@@ -658,7 +707,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Keep driving",
 
                 action: () => {
@@ -693,7 +741,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Walk toward the house",
 
                 action: () => {
@@ -708,7 +755,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Stay in the car",
 
                 action: () => {
@@ -741,7 +787,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Enter the house",
 
                 action: () => {
@@ -756,7 +801,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Search around the outside",
 
                 action: () => {
@@ -789,7 +833,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Open the shed",
 
                 action: () => {
@@ -808,7 +851,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Go back to the front door",
 
                 action: () => {
@@ -839,7 +881,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Take the photographs",
 
                 action: () => {
@@ -858,7 +899,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Leave the photographs",
 
                 action: () => {
@@ -893,7 +933,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Enter the kitchen",
 
                 action: () => {
@@ -906,7 +945,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Go upstairs",
 
                 action: () => {
@@ -937,7 +975,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Search the drawers",
 
                 action: () => {
@@ -952,7 +989,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Leave the kitchen",
 
                 action: () => {
@@ -981,7 +1017,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Investigate the noise",
 
                 action: () => {
@@ -996,7 +1031,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Search again",
 
                 action: () => {
@@ -1029,7 +1063,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Take the drawing",
 
                 action: () => {
@@ -1048,7 +1081,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Leave it",
 
                 action: () => {
@@ -1079,7 +1111,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Keep going",
 
                 action: () => {
@@ -1094,7 +1125,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Go back downstairs",
 
                 action: () => {
@@ -1127,7 +1157,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Enter the bedroom",
 
                 action: () => {
@@ -1140,7 +1169,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Try the locked door",
 
                 action: () => {
@@ -1179,7 +1207,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Examine the photograph",
 
                 action: () => {
@@ -1198,7 +1225,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Put it down",
 
                 action: () => {
@@ -1229,7 +1255,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Turn around",
 
                 action: () => {
@@ -1244,7 +1269,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Run",
 
                 action: () => {
@@ -1273,7 +1297,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Run downstairs",
 
                 action: () => {
@@ -1288,7 +1311,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Hide in the bathroom",
 
                 action: () => {
@@ -1321,7 +1343,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Stay silent",
 
                 action: () => {
@@ -1336,7 +1357,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Open the door",
 
                 action: () => {
@@ -1369,7 +1389,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Return to the hallway",
 
                 action: () => {
@@ -1382,7 +1401,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Go back to the foyer",
 
                 action: () => {
@@ -1415,7 +1433,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Search the room",
 
                 action: () => {
@@ -1432,7 +1449,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Leave immediately",
 
                 action: () => {
@@ -1461,7 +1477,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Search the house",
 
                 action: () => {
@@ -1474,7 +1489,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Keep pulling the door",
 
                 action: () => {
@@ -1507,7 +1521,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Go downstairs",
 
                 action: () => {
@@ -1522,7 +1535,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Return to the hallway",
 
                 action: () => {
@@ -1553,7 +1565,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Open the box",
 
                 action: () => {
@@ -1568,7 +1579,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Return upstairs",
 
                 action: () => {
@@ -1597,7 +1607,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Search deeper",
 
                 action: () => {
@@ -1614,7 +1623,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Leave the box",
 
                 action: () => {
@@ -1647,7 +1655,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Turn around",
 
                 action: () => {
@@ -1662,7 +1669,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Escape",
 
                 action: () => {
@@ -1695,7 +1701,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Run",
 
                 action: () => {
@@ -1710,7 +1715,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Stay",
 
                 action: () => {
@@ -1753,7 +1757,6 @@ const scenes = {
         choices: [
 
             {
-
                 text: "A — Look at the message",
 
                 action: () => {
@@ -1766,7 +1769,6 @@ const scenes = {
 
 
             {
-
                 text: "B — Throw the phone away",
 
                 action: () => {
@@ -1870,8 +1872,6 @@ function showScene(sceneName) {
 
             updateHUD();
 
-            checkSanityEffects();
-
 
             if (nextScene) {
 
@@ -1889,8 +1889,6 @@ function showScene(sceneName) {
 
     updateHUD();
 
-    checkSanityEffects();
-
 }
 
 
@@ -1899,7 +1897,5 @@ function showScene(sceneName) {
 // ================================
 
 updateHUD();
-
-checkSanityEffects();
 
 showScene("start");
