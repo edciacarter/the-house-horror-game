@@ -111,8 +111,6 @@ function changeSanity(amount) {
 
 function useBattery(amount) {
 
-    alert("FLASHLIGHT FUNCTION WORKED");
-
     gameState.battery -= amount;
 
     if (gameState.battery < 0) {
