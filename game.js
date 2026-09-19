@@ -1,7 +1,7 @@
 // ============================================================
 // THE HOUSE
 // CHAPTER ONE
-// FINAL GAME.JS
+// FINAL GAME.JS + PLACEHOLDER JUMPSCARE
 // ============================================================
 
 
@@ -31,8 +31,6 @@ const gameState = {
 
     photographChanged: false,
     hallwayChanged: false,
-
-    // Story progression
 
     exploredShed: false,
     tookPhotographs: false,
@@ -71,60 +69,33 @@ function clearTemporaryEvent() {
 
 function updateHUD() {
 
-    const health =
-        document.getElementById("health");
-
-    const sanity =
-        document.getElementById("sanity");
-
-    const battery =
-        document.getElementById("battery");
-
-    const clues =
-        document.getElementById("clues");
-
-    const inventory =
-        document.getElementById("inventory");
-
+    const health = document.getElementById("health");
+    const sanity = document.getElementById("sanity");
+    const battery = document.getElementById("battery");
+    const clues = document.getElementById("clues");
+    const inventory = document.getElementById("inventory");
 
     if (health) {
-
-        health.textContent =
-            gameState.health;
-
+        health.textContent = gameState.health;
     }
-
 
     if (sanity) {
-
-        sanity.textContent =
-            gameState.sanity;
-
+        sanity.textContent = gameState.sanity;
     }
-
 
     if (battery) {
-
-        battery.textContent =
-            gameState.battery + "%";
-
+        battery.textContent = gameState.battery + "%";
     }
-
 
     if (clues) {
-
-        clues.textContent =
-            gameState.clues;
-
+        clues.textContent = gameState.clues;
     }
-
 
     if (inventory) {
 
         if (gameState.inventory.length === 0) {
 
-            inventory.textContent =
-                "Empty";
+            inventory.textContent = "Empty";
 
         } else {
 
@@ -134,7 +105,6 @@ function updateHUD() {
         }
 
     }
-
 
     updateVisualEffects();
 
@@ -147,30 +117,19 @@ function updateHUD() {
 
 function updateVisualEffects() {
 
-    const body =
-        document.body;
-
+    const body = document.body;
 
     if (!body) {
-
         return;
-
     }
 
-
-    body.classList.remove(
-        "insane"
-    );
-
+    body.classList.remove("insane");
 
     if (gameState.sanity <= 25) {
 
-        body.classList.add(
-            "insane"
-        );
+        body.classList.add("insane");
 
     }
-
 
     body.classList.remove(
         "flashlight-warning",
@@ -178,24 +137,19 @@ function updateVisualEffects() {
         "flashlight-dead"
     );
 
-
     if (gameState.battery <= 0) {
 
         body.classList.add(
             "flashlight-dead"
         );
 
-    }
-
-    else if (gameState.battery <= 25) {
+    } else if (gameState.battery <= 25) {
 
         body.classList.add(
             "flashlight-critical"
         );
 
-    }
-
-    else if (gameState.battery <= 50) {
+    } else if (gameState.battery <= 50) {
 
         body.classList.add(
             "flashlight-warning"
@@ -203,11 +157,9 @@ function updateVisualEffects() {
 
     }
 
-
     body.classList.remove(
         "health-critical"
     );
-
 
     if (gameState.health <= 25) {
 
@@ -228,13 +180,11 @@ function changeHealth(amount) {
 
     gameState.health += amount;
 
-
     if (gameState.health > 100) {
 
         gameState.health = 100;
 
     }
-
 
     if (gameState.health <= 0) {
 
@@ -249,7 +199,6 @@ function changeHealth(amount) {
         return false;
 
     }
-
 
     updateHUD();
 
@@ -266,13 +215,11 @@ function changeSanity(amount) {
 
     gameState.sanity += amount;
 
-
     if (gameState.sanity > 100) {
 
         gameState.sanity = 100;
 
     }
-
 
     if (gameState.sanity <= 0) {
 
@@ -287,7 +234,6 @@ function changeSanity(amount) {
         return false;
 
     }
-
 
     updateHUD();
 
@@ -304,16 +250,13 @@ function useBattery(amount) {
 
     gameState.battery -= amount;
 
-
     if (gameState.battery < 0) {
 
         gameState.battery = 0;
 
     }
 
-
     updateHUD();
-
 
     if (
         gameState.battery <= 25 &&
@@ -367,20 +310,15 @@ function showDeath(message) {
 
     clearTemporaryEvent();
 
-
     const story =
         document.getElementById("story");
 
     const choices =
         document.getElementById("choices");
 
-
     if (!story || !choices) {
-
         return;
-
     }
-
 
     story.innerHTML = `
 
@@ -397,7 +335,6 @@ function showDeath(message) {
         </button>
 
     `;
-
 
     choices.innerHTML = "";
 
@@ -420,26 +357,19 @@ function flashlightScare() {
 
     }
 
-
     gameState.scaresSeen.push(
         "flashlight"
     );
 
-
     const story =
         document.getElementById("story");
 
-
     if (!story) {
-
         return;
-
     }
-
 
     const original =
         story.innerHTML;
-
 
     story.innerHTML = `
 
@@ -462,7 +392,6 @@ function flashlightScare() {
 
     `;
 
-
     temporaryEventTimer =
         setTimeout(() => {
 
@@ -484,11 +413,8 @@ function flashlightScare() {
 function randomHorrorEvent() {
 
     if (gameState.sanity > 60) {
-
         return;
-
     }
-
 
     const events = [
 
@@ -503,7 +429,6 @@ function randomHorrorEvent() {
                 </p>
             `
         },
-
 
         {
             id: "wrong",
@@ -520,7 +445,6 @@ function randomHorrorEvent() {
             `
         },
 
-
         {
             id: "breathing",
 
@@ -534,7 +458,6 @@ function randomHorrorEvent() {
                 </p>
             `
         },
-
 
         {
             id: "footsteps",
@@ -552,7 +475,6 @@ function randomHorrorEvent() {
 
     ];
 
-
     const available =
         events.filter(
             event =>
@@ -561,20 +483,13 @@ function randomHorrorEvent() {
                 )
         );
 
-
     if (available.length === 0) {
-
         return;
-
     }
-
 
     if (Math.random() > 0.28) {
-
         return;
-
     }
-
 
     const event =
         available[
@@ -584,26 +499,19 @@ function randomHorrorEvent() {
             )
         ];
 
-
     gameState.scaresSeen.push(
         event.id
     );
 
-
     const story =
         document.getElementById("story");
 
-
     if (!story) {
-
         return;
-
     }
-
 
     const original =
         story.innerHTML;
-
 
     story.innerHTML += `
 
@@ -618,7 +526,6 @@ function randomHorrorEvent() {
         </div>
 
     `;
-
 
     temporaryEventTimer =
         setTimeout(() => {
@@ -641,29 +548,19 @@ function randomHorrorEvent() {
 function triggerHallucination() {
 
     if (gameState.sanity > 35) {
-
         return;
-
     }
-
 
     if (Math.random() > 0.22) {
-
         return;
-
     }
-
 
     const story =
         document.getElementById("story");
 
-
     if (!story) {
-
         return;
-
     }
-
 
     const hallucinations = [
 
@@ -681,7 +578,6 @@ function triggerHallucination() {
 
     ];
 
-
     const message =
         hallucinations[
             Math.floor(
@@ -690,10 +586,8 @@ function triggerHallucination() {
             )
         ];
 
-
     const original =
         story.innerHTML;
-
 
     story.innerHTML = `
 
@@ -710,7 +604,6 @@ function triggerHallucination() {
         ${original}
 
     `;
-
 
     temporaryEventTimer =
         setTimeout(() => {
@@ -733,33 +626,22 @@ function triggerHallucination() {
 function phoneDisturbance() {
 
     if (gameState.sanity > 45) {
-
         return;
-
     }
-
 
     if (Math.random() > 0.18) {
-
         return;
-
     }
-
 
     const story =
         document.getElementById("story");
 
-
     if (!story) {
-
         return;
-
     }
-
 
     const original =
         story.innerHTML;
-
 
     story.innerHTML = `
 
@@ -776,7 +658,6 @@ function phoneDisturbance() {
         </p>
 
     `;
-
 
     temporaryEventTimer =
         setTimeout(() => {
@@ -813,7 +694,6 @@ function trackHouseVisit(sceneName) {
 
     ];
 
-
     if (
         houseScenes.includes(
             sceneName
@@ -823,7 +703,6 @@ function trackHouseVisit(sceneName) {
         gameState.houseVisits++;
 
     }
-
 
     if (
         gameState.houseVisits >= 8
@@ -853,13 +732,9 @@ function getHouseReaction(sceneName) {
 
     }
 
-
     if (gameState.houseVisits < 5) {
-
         return "";
-
     }
-
 
     const reactions = {
 
@@ -879,7 +754,6 @@ function getHouseReaction(sceneName) {
 
         `,
 
-
         kitchen: `
 
             <p>
@@ -891,7 +765,6 @@ function getHouseReaction(sceneName) {
             </p>
 
         `,
-
 
         hallway: `
 
@@ -909,7 +782,6 @@ function getHouseReaction(sceneName) {
 
         `,
 
-
         bedroom: `
 
             <p>
@@ -921,7 +793,6 @@ function getHouseReaction(sceneName) {
             </p>
 
         `,
-
 
         bathroom: `
 
@@ -939,7 +810,6 @@ function getHouseReaction(sceneName) {
 
         `,
 
-
         basement: `
 
             <p>
@@ -951,7 +821,6 @@ function getHouseReaction(sceneName) {
             </p>
 
         `,
-
 
         outside: `
 
@@ -967,18 +836,13 @@ function getHouseReaction(sceneName) {
 
     };
 
-
     if (!reactions[sceneName]) {
-
         return "";
-
     }
-
 
     gameState.changedRooms.push(
         sceneName
     );
-
 
     return reactions[sceneName];
 
@@ -992,11 +856,8 @@ function getHouseReaction(sceneName) {
 function entityEncounter(sceneName) {
 
     if (gameState.entitySeen) {
-
         return "";
-
     }
-
 
     const validScenes = [
 
@@ -1008,7 +869,6 @@ function entityEncounter(sceneName) {
 
     ];
 
-
     if (
         !validScenes.includes(
             sceneName
@@ -1019,27 +879,18 @@ function entityEncounter(sceneName) {
 
     }
 
-
     if (gameState.sanity > 50) {
-
         return "";
-
     }
-
 
     if (Math.random() > 0.18) {
-
         return "";
-
     }
-
 
     gameState.entitySeen =
         true;
 
-
     changeSanity(-5);
-
 
     return `
 
@@ -1079,11 +930,8 @@ function entityEncounter(sceneName) {
 function houseWhisper() {
 
     if (!gameState.houseAwake) {
-
         return "";
-
     }
-
 
     if (
         gameState.scaresSeen.includes(
@@ -1095,18 +943,13 @@ function houseWhisper() {
 
     }
 
-
     if (Math.random() > 0.12) {
-
         return "";
-
     }
-
 
     gameState.scaresSeen.push(
         "houseWhisper"
     );
-
 
     return `
 
@@ -1142,33 +985,25 @@ function runHouseSystem(sceneName) {
         sceneName
     );
 
-
     const story =
         document.getElementById("story");
 
-
     if (!story) {
-
         return;
-
     }
-
 
     const reaction =
         getHouseReaction(
             sceneName
         );
 
-
     const entity =
         entityEncounter(
             sceneName
         );
 
-
     const whisper =
         houseWhisper();
-
 
     if (
         reaction ||
@@ -1194,35 +1029,21 @@ function runHorrorSystem(sceneName) {
 
     gameState.sceneCount++;
 
-
     if (gameState.sanity <= 60) {
-
-        gameState.distortionLevel =
-            1;
-
+        gameState.distortionLevel = 1;
     }
-
 
     if (gameState.sanity <= 35) {
-
-        gameState.distortionLevel =
-            2;
-
+        gameState.distortionLevel = 2;
     }
-
 
     if (gameState.sanity <= 15) {
-
-        gameState.distortionLevel =
-            3;
-
+        gameState.distortionLevel = 3;
     }
-
 
     runHouseSystem(
         sceneName
     );
-
 
     randomHorrorEvent();
 
@@ -1234,12 +1055,841 @@ function runHorrorSystem(sceneName) {
 
 
 // ============================================================
+// PLACEHOLDER JUMPSCARE
+// ============================================================
+
+let jumpscareActive = false;
+
+let jumpscareAudioContext = null;
+
+
+function createJumpscareOverlay() {
+
+    if (
+        document.getElementById(
+            "jumpscareOverlay"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const style =
+        document.createElement("style");
+
+
+    style.id =
+        "jumpscareStyles";
+
+
+    style.textContent = `
+
+        #jumpscareOverlay {
+
+            position: fixed;
+
+            inset: 0;
+
+            width: 100vw;
+            height: 100vh;
+
+            background:
+                radial-gradient(
+                    ellipse at center,
+                    #111 0%,
+                    #020202 45%,
+                    #000 100%
+                );
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            z-index: 999999;
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            overflow: hidden;
+
+        }
+
+
+        #jumpscareOverlay.active {
+
+            opacity: 1;
+
+            pointer-events: auto;
+
+            animation:
+                jumpscareFlicker
+                0.75s
+                steps(7)
+                forwards;
+
+        }
+
+
+        #jumpscareFace {
+
+            position: relative;
+
+            width: min(72vw, 520px);
+
+            height: min(72vw, 520px);
+
+            border-radius: 50%;
+
+            background:
+
+                radial-gradient(
+                    ellipse at 50% 38%,
+                    #bcbcbc 0%,
+                    #777 28%,
+                    #292929 58%,
+                    #050505 78%,
+                    #000 100%
+                );
+
+            box-shadow:
+
+                0 0 80px rgba(255,255,255,0.08),
+
+                0 0 180px rgba(0,0,0,0.95);
+
+            transform:
+                scale(0.35);
+
+            filter:
+                contrast(1.4)
+                brightness(0.65);
+
+            animation:
+                faceAppear
+                0.55s
+                cubic-bezier(.2,.8,.2,1)
+                forwards;
+
+        }
+
+
+        #jumpscareFace::before {
+
+            content: "";
+
+            position: absolute;
+
+            left: 16%;
+
+            top: 28%;
+
+            width: 68%;
+
+            height: 35%;
+
+            border-radius: 50%;
+
+            background:
+
+                radial-gradient(
+                    ellipse at center,
+                    #000 0%,
+                    #000 35%,
+                    transparent 38%
+                );
+
+            opacity: 0.95;
+
+        }
+
+
+        .jumpscare-eye {
+
+            position: absolute;
+
+            top: 31%;
+
+            width: 19%;
+
+            height: 12%;
+
+            border-radius: 50%;
+
+            background: #000;
+
+            box-shadow:
+                0 0 18px #000;
+
+        }
+
+
+        .jumpscare-eye.left {
+
+            left: 20%;
+
+        }
+
+
+        .jumpscare-eye.right {
+
+            right: 20%;
+
+        }
+
+
+        .jumpscare-eye::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 25%;
+
+            height: 35%;
+
+            left: 38%;
+
+            top: 32%;
+
+            background: #777;
+
+            border-radius: 50%;
+
+        }
+
+
+        .jumpscare-mouth {
+
+            position: absolute;
+
+            left: 27%;
+
+            bottom: 20%;
+
+            width: 46%;
+
+            height: 16%;
+
+            border-radius:
+                0 0 50% 50%;
+
+            background: #000;
+
+            box-shadow:
+                0 0 20px #000;
+
+        }
+
+
+        .jumpscare-mouth::before {
+
+            content: "";
+
+            position: absolute;
+
+            left: 8%;
+
+            right: 8%;
+
+            top: 8%;
+
+            height: 15%;
+
+            background: #555;
+
+        }
+
+
+        .jumpscare-scratch {
+
+            position: absolute;
+
+            inset: 0;
+
+            background:
+
+                repeating-linear-gradient(
+                    110deg,
+                    transparent 0px,
+                    transparent 7px,
+                    rgba(255,255,255,0.035) 8px,
+                    transparent 9px
+                );
+
+            mix-blend-mode: screen;
+
+            pointer-events: none;
+
+        }
+
+
+        body.jumpscare-shake {
+
+            animation:
+                jumpscareShake
+                0.65s
+                linear;
+
+        }
+
+
+        body.jumpscare-flash::after {
+
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 999998;
+
+            pointer-events: none;
+
+            background: #fff;
+
+            animation:
+                screenFlash
+                0.65s
+                steps(5)
+                forwards;
+
+        }
+
+
+        @keyframes faceAppear {
+
+            0% {
+
+                transform:
+                    scale(0.25)
+                    rotate(-3deg);
+
+                opacity: 0;
+
+            }
+
+            55% {
+
+                transform:
+                    scale(1.12)
+                    rotate(2deg);
+
+                opacity: 1;
+
+            }
+
+            100% {
+
+                transform:
+                    scale(1)
+                    rotate(0deg);
+
+                opacity: 1;
+
+            }
+
+        }
+
+
+        @keyframes jumpscareFlicker {
+
+            0% {
+                opacity: 0;
+            }
+
+            8% {
+                opacity: 1;
+            }
+
+            16% {
+                opacity: 0.15;
+            }
+
+            25% {
+                opacity: 1;
+            }
+
+            38% {
+                opacity: 0.2;
+            }
+
+            48% {
+                opacity: 1;
+            }
+
+            65% {
+                opacity: 0.85;
+            }
+
+            100% {
+                opacity: 0;
+            }
+
+        }
+
+
+        @keyframes screenFlash {
+
+            0% {
+                opacity: 0;
+            }
+
+            12% {
+                opacity: 0.9;
+            }
+
+            18% {
+                opacity: 0;
+            }
+
+            28% {
+                opacity: 0.55;
+            }
+
+            35% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0;
+            }
+
+        }
+
+
+        @keyframes jumpscareShake {
+
+            0% {
+                transform: translate(0,0);
+            }
+
+            10% {
+                transform: translate(-12px,8px);
+            }
+
+            20% {
+                transform: translate(10px,-9px);
+            }
+
+            30% {
+                transform: translate(-14px,-5px);
+            }
+
+            40% {
+                transform: translate(11px,10px);
+            }
+
+            50% {
+                transform: translate(-8px,-12px);
+            }
+
+            60% {
+                transform: translate(13px,5px);
+            }
+
+            70% {
+                transform: translate(-10px,7px);
+            }
+
+            80% {
+                transform: translate(7px,-5px);
+            }
+
+            100% {
+                transform: translate(0,0);
+            }
+
+        }
+
+
+        @media (
+            prefers-reduced-motion: reduce
+        ) {
+
+            #jumpscareFace {
+
+                animation: none;
+
+                transform: scale(1);
+
+            }
+
+            #jumpscareOverlay.active {
+
+                animation: none;
+
+                opacity: 1;
+
+            }
+
+            body.jumpscare-shake {
+
+                animation: none;
+
+            }
+
+        }
+
+    `;
+
+
+    document.head.appendChild(
+        style
+    );
+
+
+    const overlay =
+        document.createElement("div");
+
+
+    overlay.id =
+        "jumpscareOverlay";
+
+
+    overlay.innerHTML = `
+
+        <div
+            id="jumpscareFace"
+            aria-hidden="true"
+        >
+
+            <div
+                class="jumpscare-eye left"
+            ></div>
+
+            <div
+                class="jumpscare-eye right"
+            ></div>
+
+            <div
+                class="jumpscare-mouth"
+            ></div>
+
+            <div
+                class="jumpscare-scratch"
+            ></div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(
+        overlay
+    );
+
+}
+
+
+function playJumpscareSound() {
+
+    try {
+
+        if (
+            !jumpscareAudioContext
+        ) {
+
+            jumpscareAudioContext =
+                new (
+                    window.AudioContext ||
+                    window.webkitAudioContext
+                )();
+
+        }
+
+
+        if (
+            jumpscareAudioContext.state ===
+            "suspended"
+        ) {
+
+            jumpscareAudioContext.resume();
+
+        }
+
+
+        const now =
+            jumpscareAudioContext.currentTime;
+
+
+        const gain =
+            jumpscareAudioContext.createGain();
+
+
+        const oscillator =
+            jumpscareAudioContext.createOscillator();
+
+
+        oscillator.type =
+            "sawtooth";
+
+
+        oscillator.frequency.setValueAtTime(
+            85,
+            now
+        );
+
+
+        oscillator.frequency.exponentialRampToValueAtTime(
+            28,
+            now + 0.65
+        );
+
+
+        gain.gain.setValueAtTime(
+            0.0001,
+            now
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.25,
+            now + 0.025
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            now + 0.75
+        );
+
+
+        oscillator.connect(
+            gain
+        );
+
+
+        gain.connect(
+            jumpscareAudioContext.destination
+        );
+
+
+        oscillator.start(now);
+
+        oscillator.stop(
+            now + 0.8
+        );
+
+
+        const noise =
+            jumpscareAudioContext.createBufferSource();
+
+
+        const buffer =
+            jumpscareAudioContext.createBuffer(
+                1,
+                jumpscareAudioContext.sampleRate * 0.25,
+                jumpscareAudioContext.sampleRate
+            );
+
+
+        const data =
+            buffer.getChannelData(0);
+
+
+        for (
+            let i = 0;
+            i < data.length;
+            i++
+        ) {
+
+            data[i] =
+                Math.random() * 2 - 1;
+
+        }
+
+
+        noise.buffer =
+            buffer;
+
+
+        const noiseGain =
+            jumpscareAudioContext.createGain();
+
+
+        noiseGain.gain.setValueAtTime(
+            0.0001,
+            now
+        );
+
+
+        noiseGain.gain.exponentialRampToValueAtTime(
+            0.12,
+            now + 0.01
+        );
+
+
+        noiseGain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            now + 0.24
+        );
+
+
+        noise.connect(
+            noiseGain
+        );
+
+
+        noiseGain.connect(
+            jumpscareAudioContext.destination
+        );
+
+
+        noise.start(now);
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Jumpscare sound unavailable."
+        );
+
+    }
+
+}
+
+
+function triggerJumpscare() {
+
+    if (jumpscareActive) {
+        return;
+    }
+
+
+    createJumpscareOverlay();
+
+
+    const overlay =
+        document.getElementById(
+            "jumpscareOverlay"
+        );
+
+
+    if (!overlay) {
+        return;
+    }
+
+
+    jumpscareActive =
+        true;
+
+
+    document.body.classList.add(
+        "jumpscare-shake",
+        "jumpscare-flash"
+    );
+
+
+    overlay.classList.remove(
+        "active"
+    );
+
+
+    void overlay.offsetWidth;
+
+
+    overlay.classList.add(
+        "active"
+    );
+
+
+    playJumpscareSound();
+
+
+    setTimeout(() => {
+
+        overlay.classList.remove(
+            "active"
+        );
+
+        document.body.classList.remove(
+            "jumpscare-shake",
+            "jumpscare-flash"
+        );
+
+        jumpscareActive =
+            false;
+
+    }, 900);
+
+}
+
+
+// ============================================================
+// JUMPSCARE CONTROLLER
+// ============================================================
+
+function checkForJumpscare(sceneName) {
+
+    // First major jumpscare:
+    // the player looks at the strange photograph.
+
+    if (
+        sceneName === "bedroomPhoto" &&
+        !gameState.scaresSeen.includes(
+            "bedroomJumpscare"
+        )
+    ) {
+
+        gameState.scaresSeen.push(
+            "bedroomJumpscare"
+        );
+
+
+        setTimeout(() => {
+
+            triggerJumpscare();
+
+        }, 900);
+
+
+        return;
+
+    }
+
+
+    // Second possible jumpscare:
+    // only if sanity is already low.
+
+    if (
+        sceneName === "hallway" &&
+        gameState.sanity <= 35 &&
+        !gameState.scaresSeen.includes(
+            "hallwayJumpscare"
+        )
+    ) {
+
+        if (Math.random() < 0.45) {
+
+            gameState.scaresSeen.push(
+                "hallwayJumpscare"
+            );
+
+
+            setTimeout(() => {
+
+                triggerJumpscare();
+
+            }, 1100);
+
+        }
+
+    }
+
+}
+
+
+// ============================================================
 // DETERMINE ENDING
 // ============================================================
 
 function determineEnding() {
-
-    // TRUE ENDING
 
     if (
 
@@ -1270,8 +1920,6 @@ function determineEnding() {
     }
 
 
-    // LOST ENDING
-
     if (
         gameState.sanity <= 25
     ) {
@@ -1281,8 +1929,6 @@ function determineEnding() {
     }
 
 
-    // HOUSE ENDING
-
     if (
         gameState.clues <= 2
     ) {
@@ -1291,8 +1937,6 @@ function determineEnding() {
 
     }
 
-
-    // NORMAL ENDING
 
     return "ending";
 
@@ -1305,52 +1949,30 @@ function determineEnding() {
 
 const scenes = {
 
-
-// ============================================================
-// START
-// ============================================================
-
 start: {
 
     text: `
 
-        <p>
-            You wake up in the back seat of your car.
-        </p>
+        <p>You wake up in the back seat of your car.</p>
 
-        <p>
-            It is <strong>2:13 AM.</strong>
-        </p>
+        <p>It is <strong>2:13 AM.</strong></p>
 
-        <p>
-            The house sits at the end of the road.
-        </p>
+        <p>The house sits at the end of the road.</p>
 
-        <p>
-            Your phone vibrates.
-        </p>
+        <p>Your phone vibrates.</p>
 
-        <p>
-            <em>"DON'T GO INSIDE."</em>
-        </p>
+        <p><em>"DON'T GO INSIDE."</em></p>
 
-        <p>
-            A second message appears.
-        </p>
+        <p>A second message appears.</p>
 
-        <p>
-            <em>
-                "PLEASE. IT KNOWS YOU'RE HERE."
-            </em>
-        </p>
+        <p><em>"PLEASE. IT KNOWS YOU'RE HERE."</em></p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Call someone",
+            text: "A — Call someone",
 
             action: () => {
 
@@ -1361,8 +1983,7 @@ start: {
         },
 
         {
-            text:
-                "B — Get out of the car",
+            text: "B — Get out of the car",
 
             action: () => {
 
@@ -1379,33 +2000,22 @@ start: {
 },
 
 
-// ============================================================
-// CALL SOMEONE
-// ============================================================
-
 callSomeone: {
 
     text: `
 
-        <p>
-            You stare at the contact list.
-        </p>
+        <p>You stare at the contact list.</p>
 
-        <p>
-            There is one person you could call.
-        </p>
+        <p>There is one person you could call.</p>
 
-        <p>
-            Your finger hovers over their name.
-        </p>
+        <p>Your finger hovers over their name.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Get out of the car",
+            text: "A — Get out of the car",
 
             action: () => {
 
@@ -1418,8 +2028,7 @@ callSomeone: {
         },
 
         {
-            text:
-                "B — Stay in the car",
+            text: "B — Stay in the car",
 
             action: () => {
 
@@ -1436,33 +2045,22 @@ callSomeone: {
 },
 
 
-// ============================================================
-// CAR
-// ============================================================
-
 car: {
 
     text: `
 
-        <p>
-            You lock the doors.
-        </p>
+        <p>You lock the doors.</p>
 
-        <p>
-            Something moves behind the house.
-        </p>
+        <p>Something moves behind the house.</p>
 
-        <p>
-            You hear footsteps approaching the car.
-        </p>
+        <p>You hear footsteps approaching the car.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Start the car",
+            text: "A — Start the car",
 
             action: () => {
 
@@ -1473,8 +2071,7 @@ car: {
         },
 
         {
-            text:
-                "B — Look directly at the window",
+            text: "B — Look directly at the window",
 
             action: () => {
 
@@ -1491,33 +2088,22 @@ car: {
 },
 
 
-// ============================================================
-// CAR ESCAPE
-// ============================================================
-
 carEscape: {
 
     text: `
 
-        <p>
-            The engine starts.
-        </p>
+        <p>The engine starts.</p>
 
-        <p>
-            Your headlights illuminate the road.
-        </p>
+        <p>Your headlights illuminate the road.</p>
 
-        <p>
-            Your phone begins ringing.
-        </p>
+        <p>Your phone begins ringing.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Answer the phone",
+            text: "A — Answer the phone",
 
             action: () => {
 
@@ -1530,8 +2116,7 @@ carEscape: {
         },
 
         {
-            text:
-                "B — Ignore it",
+            text: "B — Ignore it",
 
             action: () => {
 
@@ -1546,33 +2131,22 @@ carEscape: {
 },
 
 
-// ============================================================
-// CAR FACE
-// ============================================================
-
 carFace: {
 
     text: `
 
-        <p>
-            There is someone standing beside the driver's window.
-        </p>
+        <p>There is someone standing beside the driver's window.</p>
 
-        <p>
-            You cannot see their face.
-        </p>
+        <p>You cannot see their face.</p>
 
-        <p>
-            They slowly lean closer.
-        </p>
+        <p>They slowly lean closer.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Close your eyes",
+            text: "A — Close your eyes",
 
             action: () => {
 
@@ -1585,8 +2159,7 @@ carFace: {
         },
 
         {
-            text:
-                "B — Keep looking",
+            text: "B — Keep looking",
 
             action: () => {
 
@@ -1603,33 +2176,22 @@ carFace: {
 },
 
 
-// ============================================================
-// FACE DEATH
-// ============================================================
-
 faceDeath: {
 
     text: `
 
-        <p>
-            The figure smiles.
-        </p>
+        <p>The figure smiles.</p>
 
-        <p>
-            It shouldn't be possible.
-        </p>
+        <p>It shouldn't be possible.</p>
 
-        <p>
-            The face stretches across the window.
-        </p>
+        <p>The face stretches across the window.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Run",
+            text: "A — Run",
 
             action: () => {
 
@@ -1644,8 +2206,7 @@ faceDeath: {
         },
 
         {
-            text:
-                "B — Stay still",
+            text: "B — Stay still",
 
             action: () => {
 
@@ -1664,38 +2225,24 @@ faceDeath: {
 },
 
 
-// ============================================================
-// PHONE
-// ============================================================
-
 phone: {
 
     text: `
 
-        <p>
-            You answer.
-        </p>
+        <p>You answer.</p>
 
-        <p>
-            For several seconds,
-            nobody speaks.
-        </p>
+        <p>For several seconds, nobody speaks.</p>
 
-        <p>
-            Then you hear your own voice whisper:
-        </p>
+        <p>Then you hear your own voice whisper:</p>
 
-        <p>
-            <em>"Turn around."</em>
-        </p>
+        <p><em>"Turn around."</em></p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Keep driving",
+            text: "A — Keep driving",
 
             action: () => {
 
@@ -1706,8 +2253,7 @@ phone: {
         },
 
         {
-            text:
-                "B — Turn around",
+            text: "B — Turn around",
 
             action: () => {
 
@@ -1724,33 +2270,22 @@ phone: {
 },
 
 
-// ============================================================
-// PHONE DEATH
-// ============================================================
-
 phoneDeath: {
 
     text: `
 
-        <p>
-            You turn around.
-        </p>
+        <p>You turn around.</p>
 
-        <p>
-            The back seat is occupied.
-        </p>
+        <p>The back seat is occupied.</p>
 
-        <p>
-            Something is sitting directly behind you.
-        </p>
+        <p>Something is sitting directly behind you.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Look at it",
+            text: "A — Look at it",
 
             action: () => {
 
@@ -1765,8 +2300,7 @@ phoneDeath: {
         },
 
         {
-            text:
-                "B — Close your eyes",
+            text: "B — Close your eyes",
 
             action: () => {
 
@@ -1785,37 +2319,24 @@ phoneDeath: {
 },
 
 
-// ============================================================
-// ROAD
-// ============================================================
-
 road: {
 
     text: `
 
-        <p>
-            You continue down the road.
-        </p>
+        <p>You continue down the road.</p>
 
-        <p>
-            The house disappears behind you.
-        </p>
+        <p>The house disappears behind you.</p>
 
-        <p>
-            Then you notice something strange.
-        </p>
+        <p>Then you notice something strange.</p>
 
-        <p>
-            The road ahead looks exactly like the road behind you.
-        </p>
+        <p>The road ahead looks exactly like the road behind you.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Go back to the house",
+            text: "A — Go back to the house",
 
             action: () => {
 
@@ -1826,8 +2347,7 @@ road: {
         },
 
         {
-            text:
-                "B — Keep driving",
+            text: "B — Keep driving",
 
             action: () => {
 
@@ -1844,37 +2364,24 @@ road: {
 },
 
 
-// ============================================================
-// ROAD AGAIN
-// ============================================================
-
 roadAgain: {
 
     text: `
 
-        <p>
-            You keep driving.
-        </p>
+        <p>You keep driving.</p>
 
-        <p>
-            Ten minutes pass.
-        </p>
+        <p>Ten minutes pass.</p>
 
-        <p>
-            The house appears again.
-        </p>
+        <p>The house appears again.</p>
 
-        <p>
-            It is impossible.
-        </p>
+        <p>It is impossible.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Walk toward the house",
+            text: "A — Walk toward the house",
 
             action: () => {
 
@@ -1887,8 +2394,7 @@ roadAgain: {
         },
 
         {
-            text:
-                "B — Stay in the car",
+            text: "B — Stay in the car",
 
             action: () => {
 
@@ -1905,33 +2411,22 @@ roadAgain: {
 },
 
 
-// ============================================================
-// FRONT DOOR
-// ============================================================
-
 frontDoor: {
 
     text: `
 
-        <p>
-            You stand in front of the house.
-        </p>
+        <p>You stand in front of the house.</p>
 
-        <p>
-            The front door is slightly open.
-        </p>
+        <p>The front door is slightly open.</p>
 
-        <p>
-            You don't remember leaving it that way.
-        </p>
+        <p>You don't remember leaving it that way.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Enter the house",
+            text: "A — Enter the house",
 
             action: () => {
 
@@ -1944,8 +2439,7 @@ frontDoor: {
         },
 
         {
-            text:
-                "B — Search around the outside",
+            text: "B — Search around the outside",
 
             action: () => {
 
@@ -1962,41 +2456,28 @@ frontDoor: {
 },
 
 
-// ============================================================
-// OUTSIDE
-// ============================================================
-
 outside: {
 
     text: `
 
-        <p>
-            You walk around the side of the house.
-        </p>
+        <p>You walk around the side of the house.</p>
 
-        <p>
-            There is an old wooden shed.
-        </p>
+        <p>There is an old wooden shed.</p>
 
-        <p>
-            Something metallic glints inside.
-        </p>
+        <p>Something metallic glints inside.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Open the shed",
+            text: "A — Open the shed",
 
             action: () => {
 
                 findClue();
 
-                addItem(
-                    "Rusty Key"
-                );
+                addItem("Rusty Key");
 
                 gameState.exploredShed =
                     true;
@@ -2010,8 +2491,7 @@ outside: {
         },
 
         {
-            text:
-                "B — Go back to the front door",
+            text: "B — Go back to the front door",
 
             action: () => {
 
@@ -2026,42 +2506,28 @@ outside: {
 },
 
 
-// ============================================================
-// SHED
-// ============================================================
-
 shed: {
 
     text: `
 
-        <p>
-            The shed smells like wet wood.
-        </p>
+        <p>The shed smells like wet wood.</p>
 
-        <p>
-            You find several old photographs
-            scattered across the floor.
-        </p>
+        <p>You find several old photographs scattered across the floor.</p>
 
-        <p>
-            Every photograph shows the same house.
-        </p>
+        <p>Every photograph shows the same house.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Take the photographs",
+            text: "A — Take the photographs",
 
             action: () => {
 
                 findClue();
 
-                addItem(
-                    "Photographs"
-                );
+                addItem("Photographs");
 
                 gameState.tookPhotographs =
                     true;
@@ -2075,8 +2541,7 @@ shed: {
         },
 
         {
-            text:
-                "B — Leave the photographs",
+            text: "B — Leave the photographs",
 
             action: () => {
 
@@ -2091,41 +2556,26 @@ shed: {
 },
 
 
-// ============================================================
-// FOYER
-// ============================================================
-
 foyer: {
 
     text: `
 
-        <p>
-            You step into the foyer.
-        </p>
+        <p>You step into the foyer.</p>
 
-        <p>
-            The door closes behind you.
-        </p>
+        <p>The door closes behind you.</p>
 
-        <p>
-            There are two ways forward.
-        </p>
+        <p>There are two ways forward.</p>
 
-        <p>
-            The kitchen is to your left.
-        </p>
+        <p>The kitchen is to your left.</p>
 
-        <p>
-            A staircase leads upstairs.
-        </p>
+        <p>A staircase leads upstairs.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Enter the kitchen",
+            text: "A — Enter the kitchen",
 
             action: () => {
 
@@ -2136,8 +2586,7 @@ foyer: {
         },
 
         {
-            text:
-                "B — Go upstairs",
+            text: "B — Go upstairs",
 
             action: () => {
 
@@ -2154,36 +2603,24 @@ foyer: {
 },
 
 
-// ============================================================
-// KITCHEN
-// ============================================================
-
 kitchen: {
 
     text: `
 
-        <p>
-            The kitchen is completely dark.
-        </p>
+        <p>The kitchen is completely dark.</p>
 
-        <p>
-            You hear something moving
-            inside one of the drawers.
-        </p>
+        <p>You hear something moving inside one of the drawers.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Search the drawers",
+            text: "A — Search the drawers",
 
             action: () => {
 
-                addItem(
-                    "Kitchen Knife"
-                );
+                addItem("Kitchen Knife");
 
                 return "kitchenSearch";
 
@@ -2192,8 +2629,7 @@ kitchen: {
         },
 
         {
-            text:
-                "B — Leave the kitchen",
+            text: "B — Leave the kitchen",
 
             action: () => {
 
@@ -2208,30 +2644,20 @@ kitchen: {
 },
 
 
-// ============================================================
-// KITCHEN SEARCH
-// ============================================================
-
 kitchenSearch: {
 
     text: `
 
-        <p>
-            You search through the drawers.
-        </p>
+        <p>You search through the drawers.</p>
 
-        <p>
-            Something scratches the other side
-            of the wall.
-        </p>
+        <p>Something scratches the other side of the wall.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Investigate the noise",
+            text: "A — Investigate the noise",
 
             action: () => {
 
@@ -2244,8 +2670,7 @@ kitchenSearch: {
         },
 
         {
-            text:
-                "B — Search again",
+            text: "B — Search again",
 
             action: () => {
 
@@ -2262,40 +2687,26 @@ kitchenSearch: {
 },
 
 
-// ============================================================
-// KITCHEN CLUE
-// ============================================================
-
 kitchenClue: {
 
     text: `
 
-        <p>
-            You find a child's drawing.
-        </p>
+        <p>You find a child's drawing.</p>
 
-        <p>
-            It shows the house.
-        </p>
+        <p>It shows the house.</p>
 
-        <p>
-            There is a black figure standing
-            behind the family.
-        </p>
+        <p>There is a black figure standing behind the family.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Take the drawing",
+            text: "A — Take the drawing",
 
             action: () => {
 
-                addItem(
-                    "Child's Drawing"
-                );
+                addItem("Child's Drawing");
 
                 gameState.tookDrawing =
                     true;
@@ -2311,8 +2722,7 @@ kitchenClue: {
         },
 
         {
-            text:
-                "B — Leave it",
+            text: "B — Leave it",
 
             action: () => {
 
@@ -2327,33 +2737,22 @@ kitchenClue: {
 },
 
 
-// ============================================================
-// UPSTAIRS
-// ============================================================
-
 upstairs: {
 
     text: `
 
-        <p>
-            You climb the stairs.
-        </p>
+        <p>You climb the stairs.</p>
 
-        <p>
-            Every step creaks beneath your feet.
-        </p>
+        <p>Every step creaks beneath your feet.</p>
 
-        <p>
-            The hallway above is completely dark.
-        </p>
+        <p>The hallway above is completely dark.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Keep going",
+            text: "A — Keep going",
 
             action: () => {
 
@@ -2366,8 +2765,7 @@ upstairs: {
         },
 
         {
-            text:
-                "B — Go back downstairs",
+            text: "B — Go back downstairs",
 
             action: () => {
 
@@ -2384,33 +2782,22 @@ upstairs: {
 },
 
 
-// ============================================================
-// HALLWAY
-// ============================================================
-
 hallway: {
 
     text: `
 
-        <p>
-            The hallway stretches farther than it should.
-        </p>
+        <p>The hallway stretches farther than it should.</p>
 
-        <p>
-            There are several doors.
-        </p>
+        <p>There are several doors.</p>
 
-        <p>
-            One of them is locked.
-        </p>
+        <p>One of them is locked.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Enter the bedroom",
+            text: "A — Enter the bedroom",
 
             action: () => {
 
@@ -2421,8 +2808,7 @@ hallway: {
         },
 
         {
-            text:
-                "B — Try the locked door",
+            text: "B — Try the locked door",
 
             action: () => {
 
@@ -2439,7 +2825,6 @@ hallway: {
 
                 }
 
-
                 changeSanity(-10);
 
                 return "locked";
@@ -2453,37 +2838,26 @@ hallway: {
 },
 
 
-// ============================================================
-// BEDROOM
-// ============================================================
-
 bedroom: {
 
     text: `
 
-        <p>
-            The bedroom looks untouched.
-        </p>
+        <p>The bedroom looks untouched.</p>
 
-        <p>
-            An old photograph sits on the dresser.
-        </p>
+        <p>An old photograph sits on the dresser.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Examine the photograph",
+            text: "A — Examine the photograph",
 
             action: () => {
 
                 findClue();
 
-                addItem(
-                    "Old Photograph"
-                );
+                addItem("Old Photograph");
 
                 gameState.examinedBedroomPhoto =
                     true;
@@ -2497,8 +2871,7 @@ bedroom: {
         },
 
         {
-            text:
-                "B — Put it down",
+            text: "B — Put it down",
 
             action: () => {
 
@@ -2513,34 +2886,22 @@ bedroom: {
 },
 
 
-// ============================================================
-// BEDROOM PHOTO
-// ============================================================
-
 bedroomPhoto: {
 
     text: `
 
-        <p>
-            The photograph shows you
-            standing in this room.
-        </p>
+        <p>The photograph shows you standing in this room.</p>
 
-        <p>
-            But the photograph looks decades old.
-        </p>
+        <p>But the photograph looks decades old.</p>
 
-        <p>
-            Something moves behind you.
-        </p>
+        <p>Something moves behind you.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Turn around",
+            text: "A — Turn around",
 
             action: () => {
 
@@ -2553,8 +2914,7 @@ bedroomPhoto: {
         },
 
         {
-            text:
-                "B — Run",
+            text: "B — Run",
 
             action: () => {
 
@@ -2569,29 +2929,20 @@ bedroomPhoto: {
 },
 
 
-// ============================================================
-// RUN
-// ============================================================
-
 run: {
 
     text: `
 
-        <p>
-            You sprint into the hallway.
-        </p>
+        <p>You sprint into the hallway.</p>
 
-        <p>
-            You hear footsteps following you.
-        </p>
+        <p>You hear footsteps following you.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Run downstairs",
+            text: "A — Run downstairs",
 
             action: () => {
 
@@ -2604,8 +2955,7 @@ run: {
         },
 
         {
-            text:
-                "B — Hide in the bathroom",
+            text: "B — Hide in the bathroom",
 
             action: () => {
 
@@ -2622,33 +2972,22 @@ run: {
 },
 
 
-// ============================================================
-// BATHROOM
-// ============================================================
-
 bathroom: {
 
     text: `
 
-        <p>
-            You lock yourself inside the bathroom.
-        </p>
+        <p>You lock yourself inside the bathroom.</p>
 
-        <p>
-            The footsteps stop outside the door.
-        </p>
+        <p>The footsteps stop outside the door.</p>
 
-        <p>
-            Someone whispers your name.
-        </p>
+        <p>Someone whispers your name.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Stay silent",
+            text: "A — Stay silent",
 
             action: () => {
 
@@ -2661,8 +3000,7 @@ bathroom: {
         },
 
         {
-            text:
-                "B — Open the door",
+            text: "B — Open the door",
 
             action: () => {
 
@@ -2681,29 +3019,20 @@ bathroom: {
 },
 
 
-// ============================================================
-// BATHROOM WAIT
-// ============================================================
-
 bathroomWait: {
 
     text: `
 
-        <p>
-            The footsteps slowly disappear.
-        </p>
+        <p>The footsteps slowly disappear.</p>
 
-        <p>
-            You wait another minute before leaving.
-        </p>
+        <p>You wait another minute before leaving.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Return to the hallway",
+            text: "A — Return to the hallway",
 
             action: () => {
 
@@ -2714,8 +3043,7 @@ bathroomWait: {
         },
 
         {
-            text:
-                "B — Go back to the foyer",
+            text: "B — Go back to the foyer",
 
             action: () => {
 
@@ -2730,38 +3058,24 @@ bathroomWait: {
 },
 
 
-// ============================================================
-// LOCKED ROOM
-// ============================================================
-
 lockedRoom: {
 
     text: `
 
-        <p>
-            The rusty key fits.
-        </p>
+        <p>The rusty key fits.</p>
 
-        <p>
-            The door opens into a room
-            that shouldn't exist.
-        </p>
+        <p>The door opens into a room that shouldn't exist.</p>
 
-        <p>
-            Photographs cover every wall.
-        </p>
+        <p>Photographs cover every wall.</p>
 
-        <p>
-            Every photograph is of you.
-        </p>
+        <p>Every photograph is of you.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Search the room",
+            text: "A — Search the room",
 
             action: () => {
 
@@ -2776,8 +3090,7 @@ lockedRoom: {
         },
 
         {
-            text:
-                "B — Leave immediately",
+            text: "B — Leave immediately",
 
             action: () => {
 
@@ -2792,29 +3105,20 @@ lockedRoom: {
 },
 
 
-// ============================================================
-// LOCKED
-// ============================================================
-
 locked: {
 
     text: `
 
-        <p>
-            The door won't open.
-        </p>
+        <p>The door won't open.</p>
 
-        <p>
-            Something is moving behind it.
-        </p>
+        <p>Something is moving behind it.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Search the house",
+            text: "A — Search the house",
 
             action: () => {
 
@@ -2825,8 +3129,7 @@ locked: {
         },
 
         {
-            text:
-                "B — Keep pulling the door",
+            text: "B — Keep pulling the door",
 
             action: () => {
 
@@ -2845,29 +3148,20 @@ locked: {
 },
 
 
-// ============================================================
-// BASEMENT DOOR
-// ============================================================
-
 basementDoor: {
 
     text: `
 
-        <p>
-            You discover a door leading downstairs.
-        </p>
+        <p>You discover a door leading downstairs.</p>
 
-        <p>
-            Cold air rises from the darkness.
-        </p>
+        <p>Cold air rises from the darkness.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Go downstairs",
+            text: "A — Go downstairs",
 
             action: () => {
 
@@ -2880,8 +3174,7 @@ basementDoor: {
         },
 
         {
-            text:
-                "B — Return to the hallway",
+            text: "B — Return to the hallway",
 
             action: () => {
 
@@ -2896,33 +3189,22 @@ basementDoor: {
 },
 
 
-// ============================================================
-// BASEMENT
-// ============================================================
-
 basement: {
 
     text: `
 
-        <p>
-            The basement is filled with old furniture.
-        </p>
+        <p>The basement is filled with old furniture.</p>
 
-        <p>
-            A wooden box sits in the corner.
-        </p>
+        <p>A wooden box sits in the corner.</p>
 
-        <p>
-            Something inside it is scratching.
-        </p>
+        <p>Something inside it is scratching.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Open the box",
+            text: "A — Open the box",
 
             action: () => {
 
@@ -2938,8 +3220,7 @@ basement: {
         },
 
         {
-            text:
-                "B — Return upstairs",
+            text: "B — Return upstairs",
 
             action: () => {
 
@@ -2954,30 +3235,20 @@ basement: {
 },
 
 
-// ============================================================
-// BOX
-// ============================================================
-
 box: {
 
     text: `
 
-        <p>
-            Inside the box you find dozens
-            of photographs.
-        </p>
+        <p>Inside the box you find dozens of photographs.</p>
 
-        <p>
-            The newest photograph was taken tonight.
-        </p>
+        <p>The newest photograph was taken tonight.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Search deeper",
+            text: "A — Search deeper",
 
             action: () => {
 
@@ -2992,8 +3263,7 @@ box: {
         },
 
         {
-            text:
-                "B — Leave the box",
+            text: "B — Leave the box",
 
             action: () => {
 
@@ -3008,38 +3278,24 @@ box: {
 },
 
 
-// ============================================================
-// SECRET
-// ============================================================
-
 secret: {
 
     text: `
 
-        <p>
-            You discover a hidden passage.
-        </p>
+        <p>You discover a hidden passage.</p>
 
-        <p>
-            The walls are covered in writing.
-        </p>
+        <p>The walls are covered in writing.</p>
 
-        <p>
-            Your name appears again and again.
-        </p>
+        <p>Your name appears again and again.</p>
 
-        <p>
-            At the end of the passage,
-            someone is standing with their back toward you.
-        </p>
+        <p>At the end of the passage, someone is standing with their back toward you.</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Turn around",
+            text: "A — Turn around",
 
             action: () => {
 
@@ -3058,8 +3314,7 @@ secret: {
         },
 
         {
-            text:
-                "B — Escape",
+            text: "B — Escape",
 
             action: () => {
 
@@ -3077,37 +3332,24 @@ secret: {
 },
 
 
-// ============================================================
-// FINAL REVEAL
-// ============================================================
-
 finalReveal: {
 
     text: `
 
-        <p>
-            The figure turns.
-        </p>
+        <p>The figure turns.</p>
 
-        <p>
-            It has your face.
-        </p>
+        <p>It has your face.</p>
 
-        <p>
-            It smiles.
-        </p>
+        <p>It smiles.</p>
 
-        <p>
-            "You finally came home."
-        </p>
+        <p>"You finally came home."</p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Run",
+            text: "A — Run",
 
             action: () => {
 
@@ -3120,8 +3362,7 @@ finalReveal: {
         },
 
         {
-            text:
-                "B — Stay",
+            text: "B — Stay",
 
             action: () => {
 
@@ -3145,43 +3386,26 @@ finalReveal: {
 },
 
 
-// ============================================================
-// ESCAPE
-// ============================================================
-
 escape: {
 
     text: `
 
-        <p>
-            You run through the front door.
-        </p>
+        <p>You run through the front door.</p>
 
-        <p>
-            The night air hits your face.
-        </p>
+        <p>The night air hits your face.</p>
 
-        <p>
-            Your phone vibrates.
-        </p>
+        <p>Your phone vibrates.</p>
 
-        <p>
-            There is one final message.
-        </p>
+        <p>There is one final message.</p>
 
-        <p>
-            <em>
-                "YOU NEVER LEFT."
-            </em>
-        </p>
+        <p><em>"YOU NEVER LEFT."</em></p>
 
     `,
 
     choices: [
 
         {
-            text:
-                "A — Look at the message",
+            text: "A — Look at the message",
 
             action: () => {
 
@@ -3192,8 +3416,7 @@ escape: {
         },
 
         {
-            text:
-                "B — Throw the phone away",
+            text: "B — Throw the phone away",
 
             action: () => {
 
@@ -3207,10 +3430,6 @@ escape: {
 
 },
 
-
-// ============================================================
-// NORMAL ENDING
-// ============================================================
 
 ending: {
 
@@ -3256,8 +3475,7 @@ ending: {
     choices: [
 
         {
-            text:
-                "PLAY AGAIN",
+            text: "PLAY AGAIN",
 
             action: () => {
 
@@ -3273,10 +3491,6 @@ ending: {
 
 },
 
-
-// ============================================================
-// HOUSE ENDING
-// ============================================================
 
 houseEnding: {
 
@@ -3322,8 +3536,7 @@ houseEnding: {
     choices: [
 
         {
-            text:
-                "PLAY AGAIN",
+            text: "PLAY AGAIN",
 
             action: () => {
 
@@ -3339,10 +3552,6 @@ houseEnding: {
 
 },
 
-
-// ============================================================
-// LOST ENDING
-// ============================================================
 
 lostEnding: {
 
@@ -3391,8 +3600,7 @@ lostEnding: {
     choices: [
 
         {
-            text:
-                "PLAY AGAIN",
+            text: "PLAY AGAIN",
 
             action: () => {
 
@@ -3408,10 +3616,6 @@ lostEnding: {
 
 },
 
-
-// ============================================================
-// TRUE ENDING
-// ============================================================
 
 trueEnding: {
 
@@ -3511,8 +3715,7 @@ trueEnding: {
     choices: [
 
         {
-            text:
-                "PLAY AGAIN",
+            text: "PLAY AGAIN",
 
             action: () => {
 
@@ -3540,7 +3743,6 @@ function showScene(sceneName) {
     const scene =
         scenes[sceneName];
 
-
     if (!scene) {
 
         console.error(
@@ -3551,7 +3753,6 @@ function showScene(sceneName) {
         return;
 
     }
-
 
     clearTemporaryEvent();
 
@@ -3564,9 +3765,7 @@ function showScene(sceneName) {
 
 
     if (!story || !choices) {
-
         return;
-
     }
 
 
@@ -3628,13 +3827,17 @@ function showScene(sceneName) {
             sceneName
         );
 
+        checkForJumpscare(
+            sceneName
+        );
+
     }, 350);
 
 }
 
 
 // ============================================================
-// AUDIO
+// AMBIENT AUDIO
 // ============================================================
 
 let audioContext = null;
@@ -3645,9 +3848,7 @@ let ambientStarted = false;
 function startAmbientSound() {
 
     if (ambientStarted) {
-
         return;
-
     }
 
 
@@ -3670,12 +3871,12 @@ function startAmbientSound() {
         }
 
 
-        const oscillator =
-            audioContext.createOscillator();
-
-
         ambientGain =
             audioContext.createGain();
+
+
+        const oscillator =
+            audioContext.createOscillator();
 
 
         oscillator.type =
@@ -3726,13 +3927,9 @@ function startAmbientSound() {
 
 
             ambientGain.gain.setTargetAtTime(
-
                 variation,
-
                 audioContext.currentTime,
-
                 1.5
-
             );
 
         }, 3500);
@@ -3772,9 +3969,7 @@ function startGame() {
 
 
     if (!titleScreen) {
-
         return;
-
     }
 
 
@@ -3811,6 +4006,9 @@ function startGame() {
 document.addEventListener(
     "DOMContentLoaded",
     () => {
+
+        createJumpscareOverlay();
+
 
         const startButton =
             document.getElementById(
