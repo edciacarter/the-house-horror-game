@@ -3,6 +3,7 @@
 // GAME SYSTEM
 // ================================
 
+
 const gameState = {
 
     health: 100,
@@ -56,71 +57,107 @@ function updateHUD() {
 
 
 // ================================
-// CHANGE GAME STATS
+// HEALTH
 // ================================
 
 function changeHealth(amount) {
 
     gameState.health += amount;
 
+
     if (gameState.health > 100) {
+
         gameState.health = 100;
+
     }
+
 
     if (gameState.health <= 0) {
 
         gameState.health = 0;
+
+        updateHUD();
 
         showDeath(
             "YOUR BODY COULDN'T TAKE ANY MORE."
         );
 
         return false;
+
     }
+
 
     updateHUD();
 
     return true;
+
 }
 
+
+// ================================
+// SANITY
+// ================================
 
 function changeSanity(amount) {
 
     gameState.sanity += amount;
 
+
     if (gameState.sanity > 100) {
+
         gameState.sanity = 100;
+
     }
+
 
     if (gameState.sanity <= 0) {
 
         gameState.sanity = 0;
+
+        updateHUD();
 
         showDeath(
             "YOU LOST YOUR MIND BEFORE YOU COULD ESCAPE."
         );
 
         return false;
+
     }
+
 
     updateHUD();
 
+    checkSanityEffects();
+
     return true;
+
 }
 
+
+// ================================
+// BATTERY
+// ================================
 
 function useBattery(amount) {
 
     gameState.battery -= amount;
 
+
     if (gameState.battery < 0) {
+
         gameState.battery = 0;
+
     }
+
 
     updateHUD();
 
 }
 
+
+// ================================
+// CLUES
+// ================================
 
 function findClue() {
 
@@ -130,6 +167,10 @@ function findClue() {
 
 }
 
+
+// ================================
+// ITEMS
+// ================================
 
 function addItem(item) {
 
@@ -162,7 +203,27 @@ function showDeath(message) {
             TRY AGAIN
         </button>`;
 
+
     document.getElementById("choices").innerHTML = "";
+
+}
+
+
+// ================================
+// LOW SANITY EFFECT
+// ================================
+
+function checkSanityEffects() {
+
+    if (gameState.sanity <= 25) {
+
+        document.body.classList.add("insane");
+
+    } else {
+
+        document.body.classList.remove("insane");
+
+    }
 
 }
 
@@ -176,6 +237,7 @@ const scenes = {
     start: {
 
         text: `
+
         <p>You wake up in the back seat of your car.</p>
 
         <p>It is <strong>2:13 AM.</strong></p>
@@ -189,11 +251,13 @@ const scenes = {
         <p>A second message appears.</p>
 
         <p><em>"PLEASE. IT KNOWS YOU'RE HERE."</em></p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Call someone",
 
                 action: () => {
@@ -204,7 +268,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Get out of the car",
 
                 action: () => {
@@ -225,16 +291,19 @@ const scenes = {
     callSomeone: {
 
         text: `
+
         <p>You stare at the contact list.</p>
 
         <p>There is one person you could call.</p>
 
         <p>Your finger hovers over their name.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Get out of the car",
 
                 action: () => {
@@ -247,7 +316,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Stay in the car",
 
                 action: () => {
@@ -268,16 +339,19 @@ const scenes = {
     car: {
 
         text: `
+
         <p>You lock the doors.</p>
 
         <p>Something moves behind the house.</p>
 
         <p>You hear footsteps approaching the car.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Start the car",
 
                 action: () => {
@@ -288,7 +362,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Look directly at the window",
 
                 action: () => {
@@ -309,16 +385,19 @@ const scenes = {
     carEscape: {
 
         text: `
+
         <p>The engine starts.</p>
 
         <p>Your headlights illuminate the road.</p>
 
         <p>Your phone begins ringing.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Answer the phone",
 
                 action: () => {
@@ -331,7 +410,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Ignore it",
 
                 action: () => {
@@ -350,16 +431,19 @@ const scenes = {
     carFace: {
 
         text: `
+
         <p>There is someone standing beside the driver's window.</p>
 
         <p>You cannot see their face.</p>
 
         <p>They slowly lean closer.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Close your eyes",
 
                 action: () => {
@@ -372,7 +456,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Keep looking",
 
                 action: () => {
@@ -393,16 +479,19 @@ const scenes = {
     faceDeath: {
 
         text: `
+
         <p>The figure smiles.</p>
 
         <p>It shouldn't be possible.</p>
 
         <p>The face stretches across the window.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Run",
 
                 action: () => {
@@ -417,7 +506,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Stay still",
 
                 action: () => {
@@ -440,6 +531,7 @@ const scenes = {
     phone: {
 
         text: `
+
         <p>You answer.</p>
 
         <p>For several seconds, nobody speaks.</p>
@@ -447,11 +539,13 @@ const scenes = {
         <p>Then you hear your own voice whisper:</p>
 
         <p><em>"Turn around."</em></p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Keep driving",
 
                 action: () => {
@@ -462,7 +556,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Turn around",
 
                 action: () => {
@@ -483,16 +579,19 @@ const scenes = {
     phoneDeath: {
 
         text: `
+
         <p>You turn around.</p>
 
         <p>The back seat is occupied.</p>
 
         <p>Something is sitting directly behind you.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Look at it",
 
                 action: () => {
@@ -507,7 +606,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Close your eyes",
 
                 action: () => {
@@ -530,6 +631,7 @@ const scenes = {
     road: {
 
         text: `
+
         <p>You continue down the road.</p>
 
         <p>The house disappears behind you.</p>
@@ -537,11 +639,13 @@ const scenes = {
         <p>Then you notice something strange.</p>
 
         <p>The road ahead looks exactly like the road behind you.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Go back to the house",
 
                 action: () => {
@@ -552,7 +656,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Keep driving",
 
                 action: () => {
@@ -573,6 +679,7 @@ const scenes = {
     roadAgain: {
 
         text: `
+
         <p>You keep driving.</p>
 
         <p>Ten minutes pass.</p>
@@ -580,11 +687,13 @@ const scenes = {
         <p>The house appears again.</p>
 
         <p>It is impossible.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Walk toward the house",
 
                 action: () => {
@@ -597,7 +706,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Stay in the car",
 
                 action: () => {
@@ -618,16 +729,19 @@ const scenes = {
     frontDoor: {
 
         text: `
+
         <p>You stand in front of the house.</p>
 
         <p>The front door is slightly open.</p>
 
         <p>You don't remember leaving it that way.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Enter the house",
 
                 action: () => {
@@ -640,7 +754,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Search around the outside",
 
                 action: () => {
@@ -661,16 +777,19 @@ const scenes = {
     outside: {
 
         text: `
+
         <p>You walk around the side of the house.</p>
 
         <p>There is an old wooden shed.</p>
 
         <p>Something metallic glints inside.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Open the shed",
 
                 action: () => {
@@ -687,7 +806,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Go back to the front door",
 
                 action: () => {
@@ -706,16 +827,19 @@ const scenes = {
     shed: {
 
         text: `
+
         <p>The shed smells like wet wood.</p>
 
         <p>You find several old photographs scattered across the floor.</p>
 
         <p>Every photograph shows the same house.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Take the photographs",
 
                 action: () => {
@@ -731,6 +855,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -752,6 +877,7 @@ const scenes = {
     foyer: {
 
         text: `
+
         <p>You step into the foyer.</p>
 
         <p>The door closes behind you.</p>
@@ -761,11 +887,13 @@ const scenes = {
         <p>The kitchen is to your left.</p>
 
         <p>A staircase leads upstairs.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Enter the kitchen",
 
                 action: () => {
@@ -776,7 +904,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Go upstairs",
 
                 action: () => {
@@ -797,14 +927,17 @@ const scenes = {
     kitchen: {
 
         text: `
+
         <p>The kitchen is completely dark.</p>
 
         <p>You hear something moving inside one of the drawers.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Search the drawers",
 
                 action: () => {
@@ -817,7 +950,9 @@ const scenes = {
 
             },
 
+
             {
+
                 text: "B — Leave the kitchen",
 
                 action: () => {
@@ -836,14 +971,17 @@ const scenes = {
     kitchenSearch: {
 
         text: `
+
         <p>You search through the drawers.</p>
 
         <p>Something scratches the other side of the wall.</p>
+
         `,
 
         choices: [
 
             {
+
                 text: "A — Investigate the noise",
 
                 action: () => {
@@ -855,6 +993,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -878,11 +1017,13 @@ const scenes = {
     kitchenClue: {
 
         text: `
+
         <p>You find a child's drawing.</p>
 
         <p>It shows the house.</p>
 
         <p>There is a black figure standing behind the family.</p>
+
         `,
 
         choices: [
@@ -905,6 +1046,7 @@ const scenes = {
 
             },
 
+
             {
 
                 text: "B — Leave it",
@@ -925,11 +1067,13 @@ const scenes = {
     upstairs: {
 
         text: `
+
         <p>You climb the stairs.</p>
 
         <p>Every step creaks beneath your feet.</p>
 
         <p>The hallway above is completely dark.</p>
+
         `,
 
         choices: [
@@ -947,6 +1091,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -970,11 +1115,13 @@ const scenes = {
     hallway: {
 
         text: `
+
         <p>The hallway stretches farther than it should.</p>
 
         <p>There are several doors.</p>
 
         <p>One of them is locked.</p>
+
         `,
 
         choices: [
@@ -990,6 +1137,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -1021,9 +1169,11 @@ const scenes = {
     bedroom: {
 
         text: `
+
         <p>The bedroom looks untouched.</p>
 
         <p>An old photograph sits on the dresser.</p>
+
         `,
 
         choices: [
@@ -1046,6 +1196,7 @@ const scenes = {
 
             },
 
+
             {
 
                 text: "B — Put it down",
@@ -1066,11 +1217,13 @@ const scenes = {
     bedroomPhoto: {
 
         text: `
+
         <p>The photograph shows you standing in this room.</p>
 
         <p>But the photograph looks decades old.</p>
 
         <p>Something moves behind you.</p>
+
         `,
 
         choices: [
@@ -1088,6 +1241,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -1109,9 +1263,11 @@ const scenes = {
     run: {
 
         text: `
+
         <p>You sprint into the hallway.</p>
 
         <p>You hear footsteps following you.</p>
+
         `,
 
         choices: [
@@ -1129,6 +1285,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -1152,11 +1309,13 @@ const scenes = {
     bathroom: {
 
         text: `
+
         <p>You lock yourself inside the bathroom.</p>
 
         <p>The footsteps stop outside the door.</p>
 
         <p>Someone whispers your name.</p>
+
         `,
 
         choices: [
@@ -1175,13 +1334,12 @@ const scenes = {
 
             },
 
+
             {
 
                 text: "B — Open the door",
 
                 action: () => {
-
-                    changeHealth(-50);
 
                     showDeath(
                         "THE DOOR WAS NEVER LOCKED."
@@ -1201,9 +1359,11 @@ const scenes = {
     bathroomWait: {
 
         text: `
+
         <p>The footsteps slowly disappear.</p>
 
         <p>You wait another minute before leaving.</p>
+
         `,
 
         choices: [
@@ -1219,6 +1379,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -1240,6 +1401,7 @@ const scenes = {
     lockedRoom: {
 
         text: `
+
         <p>The rusty key fits.</p>
 
         <p>The door opens into a room that shouldn't exist.</p>
@@ -1247,6 +1409,7 @@ const scenes = {
         <p>Photographs cover every wall.</p>
 
         <p>Every photograph is of you.</p>
+
         `,
 
         choices: [
@@ -1266,6 +1429,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -1287,9 +1451,11 @@ const scenes = {
     locked: {
 
         text: `
+
         <p>The door won't open.</p>
 
         <p>Something is moving behind it.</p>
+
         `,
 
         choices: [
@@ -1305,6 +1471,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -1330,9 +1497,11 @@ const scenes = {
     basementDoor: {
 
         text: `
+
         <p>You discover a door leading downstairs.</p>
 
         <p>Cold air rises from the darkness.</p>
+
         `,
 
         choices: [
@@ -1350,6 +1519,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -1371,11 +1541,13 @@ const scenes = {
     basement: {
 
         text: `
+
         <p>The basement is filled with old furniture.</p>
 
         <p>A wooden box sits in the corner.</p>
 
         <p>Something inside it is scratching.</p>
+
         `,
 
         choices: [
@@ -1393,6 +1565,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -1414,9 +1587,11 @@ const scenes = {
     box: {
 
         text: `
+
         <p>Inside the box you find dozens of photographs.</p>
 
         <p>The newest photograph was taken tonight.</p>
+
         `,
 
         choices: [
@@ -1436,6 +1611,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -1457,6 +1633,7 @@ const scenes = {
     secret: {
 
         text: `
+
         <p>You discover a hidden passage.</p>
 
         <p>The walls are covered in writing.</p>
@@ -1464,6 +1641,7 @@ const scenes = {
         <p>Your name appears again and again.</p>
 
         <p>At the end of the passage, someone is standing with their back toward you.</p>
+
         `,
 
         choices: [
@@ -1481,6 +1659,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -1502,6 +1681,7 @@ const scenes = {
     finalReveal: {
 
         text: `
+
         <p>The figure turns.</p>
 
         <p>It has your face.</p>
@@ -1509,6 +1689,7 @@ const scenes = {
         <p>It smiles.</p>
 
         <p>"You finally came home."</p>
+
         `,
 
         choices: [
@@ -1527,15 +1708,22 @@ const scenes = {
 
             },
 
+
             {
 
                 text: "B — Stay",
 
                 action: () => {
 
-                    changeSanity(-100);
+                    gameState.sanity = 0;
 
-                    return "trueEnding";
+                    updateHUD();
+
+                    showDeath(
+                        "YOU WERE NEVER THE ONE ESCAPING."
+                    );
+
+                    return null;
 
                 }
 
@@ -1549,6 +1737,7 @@ const scenes = {
     escape: {
 
         text: `
+
         <p>You run through the front door.</p>
 
         <p>The night air hits your face.</p>
@@ -1558,6 +1747,7 @@ const scenes = {
         <p>There is one final message.</p>
 
         <p><em>"YOU NEVER LEFT."</em></p>
+
         `,
 
         choices: [
@@ -1573,6 +1763,7 @@ const scenes = {
                 }
 
             },
+
 
             {
 
@@ -1594,11 +1785,13 @@ const scenes = {
     ending: {
 
         text: `
+
         <div class="death">
             TO BE CONTINUED...
         </div>
 
         <p>CHAPTER ONE COMPLETE.</p>
+
         `,
 
         choices: []
@@ -1609,6 +1802,7 @@ const scenes = {
     trueEnding: {
 
         text: `
+
         <div class="death">
             YOU WERE NEVER THE ONE ESCAPING.
         </div>
@@ -1616,6 +1810,7 @@ const scenes = {
         <p>The house was waiting for you.</p>
 
         <p>And now it knows your name.</p>
+
         `,
 
         choices: []
@@ -1626,31 +1821,13 @@ const scenes = {
 
 
 // ================================
-// SANITY EFFECT
-// ================================
-
-function checkSanityEffects() {
-
-    if (gameState.sanity <= 25) {
-
-        document.body.classList.add("insane");
-
-    } else {
-
-        document.body.classList.remove("insane");
-
-    }
-
-}
-
-
-// ================================
 // SHOW SCENE
 // ================================
 
 function showScene(sceneName) {
 
     const scene = scenes[sceneName];
+
 
     if (!scene) {
 
@@ -1660,6 +1837,7 @@ function showScene(sceneName) {
         );
 
         return;
+
     }
 
 
@@ -1670,6 +1848,7 @@ function showScene(sceneName) {
     const choicesElement =
         document.getElementById("choices");
 
+
     choicesElement.innerHTML = "";
 
 
@@ -1677,6 +1856,7 @@ function showScene(sceneName) {
 
         const button =
             document.createElement("button");
+
 
         button.textContent =
             choice.text;
@@ -1687,9 +1867,11 @@ function showScene(sceneName) {
             const nextScene =
                 choice.action();
 
+
             updateHUD();
 
             checkSanityEffects();
+
 
             if (nextScene) {
 
