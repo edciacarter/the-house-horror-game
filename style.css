@@ -2,8 +2,10 @@
     box-sizing: border-box;
 }
 
+
 body {
     margin: 0;
+
     min-height: 100vh;
 
     background:
@@ -16,20 +18,29 @@ body {
 
     color: #e8e8e8;
 
-    font-family: Georgia, "Times New Roman", serif;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
     display: flex;
+
     justify-content: center;
+
     align-items: center;
 
     padding: 30px;
 }
 
+
 .game {
     width: 100%;
+
     max-width: 800px;
+
     text-align: center;
 }
+
 
 .chapter {
     color: #777;
@@ -40,6 +51,7 @@ body {
 
     margin-bottom: 15px;
 }
+
 
 h1 {
     color: #a00000;
@@ -70,6 +82,7 @@ h1 {
     margin-bottom: 20px;
 }
 
+
 .stat {
     background: #0d0d0d;
 
@@ -86,13 +99,16 @@ h1 {
     gap: 8px;
 }
 
+
 .stat span {
     font-size: 20px;
 }
 
+
 .stat div {
     text-align: left;
 }
+
 
 .stat small {
     display: block;
@@ -105,6 +121,7 @@ h1 {
 
     margin-bottom: 3px;
 }
+
 
 .stat strong {
     color: #ddd;
@@ -136,7 +153,10 @@ h1 {
         0 0 50px rgba(0, 0, 0, 0.8);
 }
 
+
 #story {
+    width: 100%;
+
     font-size: 19px;
 
     line-height: 1.8;
@@ -150,6 +170,7 @@ h1 {
 #choices {
     margin-top: 25px;
 }
+
 
 button {
     display: block;
@@ -166,7 +187,10 @@ button {
 
     border: 1px solid #444;
 
-    font-family: Georgia, serif;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
     font-size: 17px;
 
@@ -180,6 +204,7 @@ button {
         transform 0.2s;
 }
 
+
 button:hover {
     background: #280000;
 
@@ -187,6 +212,7 @@ button:hover {
 
     transform: translateX(5px);
 }
+
 
 button:active {
     transform: translateX(2px);
@@ -209,6 +235,7 @@ button:active {
     text-align: left;
 }
 
+
 .inventory-title {
     color: #666;
 
@@ -218,6 +245,7 @@ button:active {
 
     margin-bottom: 8px;
 }
+
 
 #inventory {
     color: #aaa;
@@ -242,53 +270,13 @@ button:active {
 
 
 /* =========================
-   MOBILE
-   ========================= */
-
-@media (max-width: 600px) {
-
-    body {
-        padding: 15px;
-    }
-
-    h1 {
-        font-size: 32px;
-
-        letter-spacing: 7px;
-
-        margin-bottom: 25px;
-    }
-
-    .hud {
-        grid-template-columns:
-            repeat(2, 1fr);
-    }
-
-    .story-box {
-        padding: 25px;
-
-        min-height: 300px;
-    }
-
-    #story {
-        font-size: 17px;
-    }
-
-    button {
-        font-size: 16px;
-
-        padding: 17px;
-    }
-
-}
-
-/* =========================
-   LOW SANITY EFFECT
+   LOW SANITY
    ========================= */
 
 body.insane {
     animation: sanityShake 0.15s infinite;
 }
+
 
 body.insane .story-box {
     border-color: #600000;
@@ -298,13 +286,16 @@ body.insane .story-box {
         0 0 80px rgba(120, 0, 0, 0.2);
 }
 
+
 body.insane h1 {
     animation: sanityFlicker 1.2s infinite;
 }
 
+
 body.insane #story {
     animation: sanityText 2s infinite;
 }
+
 
 @keyframes sanityShake {
 
@@ -330,9 +321,11 @@ body.insane #story {
 
 }
 
+
 @keyframes sanityFlicker {
 
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
     }
 
@@ -354,14 +347,63 @@ body.insane #story {
 
 }
 
+
 @keyframes sanityText {
 
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
     }
 
     50% {
         opacity: 0.75;
+    }
+
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 15px;
+    }
+
+
+    h1 {
+        font-size: 32px;
+
+        letter-spacing: 7px;
+
+        margin-bottom: 25px;
+    }
+
+
+    .hud {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+
+    .story-box {
+        padding: 25px;
+
+        min-height: 300px;
+    }
+
+
+    #story {
+        font-size: 17px;
+    }
+
+
+    button {
+        font-size: 16px;
+
+        padding: 17px;
     }
 
 }
