@@ -1,64 +1,59 @@
-/* =========================================================
+/* =================================
    THE HOUSE
-   CINEMATIC HORROR VISUAL SYSTEM
-   ========================================================= */
+   FINAL CINEMATIC STYLE
+================================= */
 
 
-/* =========================================================
-   GLOBAL
-   ========================================================= */
+/* =================================
+   RESET
+================================= */
 
 * {
     box-sizing: border-box;
 }
 
 
-html {
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
     min-height: 100%;
 }
 
 
 body {
-    margin: 0;
-
-    min-height: 100vh;
 
     background:
         radial-gradient(
-            circle at 50% 35%,
-            #171717 0%,
-            #0a0a0a 42%,
-            #000000 100%
+            circle at center,
+            #151515 0%,
+            #080808 45%,
+            #020202 100%
         );
 
-    color: #e5e5e5;
+    color: #d6d6d6;
 
     font-family:
         Georgia,
         "Times New Roman",
         serif;
 
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    padding: 30px;
-
     overflow-x: hidden;
 
     transition:
         background 1s ease,
-        filter 0.5s ease;
+        filter 1s ease;
+
 }
 
 
-/* =========================================================
+/* =================================
    ATMOSPHERE
-   ========================================================= */
+================================= */
 
 body::before {
+
     content: "";
 
     position: fixed;
@@ -69,19 +64,19 @@ body::before {
 
     background:
         radial-gradient(
-            ellipse at center,
-            transparent 25%,
-            rgba(0, 0, 0, 0.45) 70%,
-            rgba(0, 0, 0, 0.85) 100%
+            circle at center,
+            transparent 20%,
+            rgba(0,0,0,0.35) 65%,
+            rgba(0,0,0,0.8) 100%
         );
 
-    z-index: 100;
+    z-index: 50;
 
-    opacity: 0.85;
 }
 
 
 body::after {
+
     content: "";
 
     position: fixed;
@@ -90,125 +85,272 @@ body::after {
 
     pointer-events: none;
 
-    background:
+    opacity: 0.08;
+
+    background-image:
         repeating-linear-gradient(
             0deg,
-            rgba(255, 255, 255, 0.012) 0px,
-            rgba(255, 255, 255, 0.012) 1px,
+            rgba(255,255,255,0.03) 0px,
+            rgba(255,255,255,0.03) 1px,
             transparent 1px,
-            transparent 4px
+            transparent 3px
         );
 
-    z-index: 101;
+    z-index: 51;
 
-    opacity: 0.25;
 }
 
 
-/* =========================================================
-   MAIN GAME
-   ========================================================= */
+/* =================================
+   TITLE SCREEN
+================================= */
 
-.game {
-    width: 100%;
+.title-screen {
 
-    max-width: 800px;
+    position: fixed;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
 
     text-align: center;
 
-    position: relative;
+    background:
+        radial-gradient(
+            ellipse at center,
+            #151515 0%,
+            #070707 55%,
+            #000000 100%
+        );
 
-    z-index: 2;
+    z-index: 100;
 
     animation:
-        gameAppear 1.2s ease;
-}
-
-
-@keyframes gameAppear {
-
-    from {
-        opacity: 0;
-
-        transform:
-            translateY(12px);
-    }
-
-    to {
-        opacity: 1;
-
-        transform:
-            translateY(0);
-    }
+        titleFadeIn 2s ease forwards;
 
 }
 
 
-/* =========================================================
-   CHAPTER TITLE
-   ========================================================= */
+.title-content {
 
-.chapter {
-    color: #666;
+    width: min(90%, 700px);
+
+    padding: 40px;
+
+}
+
+
+.title-warning {
+
+    color: #777;
 
     font-size: 11px;
 
     letter-spacing: 6px;
 
-    margin-bottom: 14px;
-
-    text-transform: uppercase;
-
-    opacity: 0.85;
+    margin-bottom: 30px;
 
     animation:
-        titleFade 2s ease;
-}
-
-
-@keyframes titleFade {
-
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 0.85;
-    }
+        warningFlicker 4s infinite;
 
 }
 
 
-/* =========================================================
-   MAIN TITLE
-   ========================================================= */
+.title-screen h1 {
 
-h1 {
-    color: #980000;
+    margin: 0;
 
-    font-size: 48px;
+    color: #e8e8e8;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(55px, 13vw, 120px);
 
     letter-spacing: 12px;
-
-    margin: 0 0 30px;
 
     font-weight: normal;
 
     text-shadow:
-        0 0 8px rgba(160, 0, 0, 0.35),
-        0 0 25px rgba(120, 0, 0, 0.15);
+        0 0 25px rgba(255,255,255,0.08),
+        0 0 60px rgba(255,0,0,0.08);
 
-    transition:
-        color 0.5s ease,
-        text-shadow 0.5s ease;
+    animation:
+        titlePulse 5s infinite;
+
 }
 
 
-/* =========================================================
+.title-subtitle {
+
+    margin-top: 18px;
+
+    color: #777;
+
+    font-size: 13px;
+
+    letter-spacing: 8px;
+
+}
+
+
+.title-warning-small {
+
+    margin-top: 35px;
+
+    color: #444;
+
+    font-size: 9px;
+
+    letter-spacing: 4px;
+
+}
+
+
+/* =================================
+   START BUTTON
+================================= */
+
+.start-button {
+
+    margin-top: 55px;
+
+    padding:
+        16px 35px;
+
+    border:
+        1px solid #555;
+
+    background:
+        rgba(0,0,0,0.75);
+
+    color: #ddd;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 13px;
+
+    letter-spacing: 4px;
+
+    cursor: pointer;
+
+    transition:
+        all 0.35s ease;
+
+}
+
+
+.start-button:hover {
+
+    border-color: #8b0000;
+
+    color: #fff;
+
+    background:
+        rgba(80,0,0,0.25);
+
+    box-shadow:
+        0 0 25px rgba(139,0,0,0.25);
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+.start-button:active {
+
+    transform:
+        translateY(1px);
+
+}
+
+
+/* =================================
+   GAME CONTAINER
+================================= */
+
+.game-container {
+
+    width: min(
+        92%,
+        900px
+    );
+
+    margin:
+        0 auto;
+
+    padding:
+        45px 0 70px;
+
+    opacity: 0;
+
+    animation:
+        gameFadeIn 1.5s ease forwards;
+
+    animation-delay: 0.2s;
+
+}
+
+
+/* =================================
+   HEADER
+================================= */
+
+.game-header {
+
+    text-align: center;
+
+    margin-bottom: 35px;
+
+}
+
+
+.game-header h1 {
+
+    margin: 0;
+
+    color: #ddd;
+
+    font-size:
+        clamp(28px, 5vw, 48px);
+
+    font-weight: normal;
+
+    letter-spacing: 9px;
+
+}
+
+
+.game-header p {
+
+    margin-top: 8px;
+
+    color: #555;
+
+    font-size: 10px;
+
+    letter-spacing: 5px;
+
+}
+
+
+/* =================================
    HUD
-   ========================================================= */
+================================= */
 
 .hud {
+
     display: grid;
 
     grid-template-columns:
@@ -216,202 +358,418 @@ h1 {
 
     gap: 10px;
 
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+
 }
 
 
 .stat {
-    background:
-        linear-gradient(
-            145deg,
-            rgba(20, 20, 20, 0.95),
-            rgba(7, 7, 7, 0.95)
-        );
 
-    border: 1px solid #292929;
+    padding:
+        13px 10px;
 
-    padding: 12px 8px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 8px;
-
-    position: relative;
-
-    overflow: hidden;
-
-    transition:
-        border-color 0.3s ease,
-        background 0.3s ease,
-        transform 0.2s ease;
-}
-
-
-.stat::after {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
+    border:
+        1px solid #252525;
 
     background:
         linear-gradient(
-            120deg,
-            transparent,
-            rgba(255,255,255,0.025),
-            transparent
+            180deg,
+            rgba(30,30,30,0.9),
+            rgba(10,10,10,0.9)
         );
 
-    transform:
-        translateX(-100%);
+    text-align: center;
 
-    animation:
-        hudShimmer 7s infinite;
-}
+    box-shadow:
+        inset 0 1px rgba(255,255,255,0.02);
 
-
-@keyframes hudShimmer {
-
-    0% {
-        transform:
-            translateX(-100%);
-    }
-
-    15% {
-        transform:
-            translateX(100%);
-    }
-
-    100% {
-        transform:
-            translateX(100%);
-    }
-
-}
-
-
-.stat:hover {
-    border-color: #444;
-
-    transform:
-        translateY(-1px);
 }
 
 
 .stat span {
-    font-size: 20px;
 
-    filter:
-        grayscale(0.15);
-}
-
-
-.stat div {
-    text-align: left;
-}
-
-
-.stat small {
     display: block;
 
-    color: #666;
+    margin-bottom: 6px;
+
+    color: #555;
 
     font-size: 9px;
 
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 
-    margin-bottom: 3px;
 }
 
 
 .stat strong {
-    color: #ddd;
 
-    font-size: 15px;
+    color: #aaa;
+
+    font-size: 18px;
 
     font-weight: normal;
+
 }
 
 
-/* =========================================================
-   STORY BOX
-   ========================================================= */
+/* =================================
+   STORY
+================================= */
 
-.story-box {
-    background:
-        linear-gradient(
-            145deg,
-            rgba(18, 18, 18, 0.97),
-            rgba(8, 8, 8, 0.98)
-        );
-
-    border: 1px solid #292929;
-
-    padding: 35px;
-
-    min-height: 260px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
+.story {
 
     position: relative;
 
-    overflow: hidden;
+    min-height: 270px;
 
-    box-shadow:
-        0 0 50px rgba(0, 0, 0, 0.8),
-        inset 0 0 35px rgba(0, 0, 0, 0.35);
+    padding:
+        35px 32px;
 
-    animation:
-        storyAppear 0.5s ease;
-}
-
-
-.story-box::before {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    pointer-events: none;
+    border:
+        1px solid #252525;
 
     background:
-        radial-gradient(
-            circle at 50% 50%,
-            rgba(255,255,255,0.018),
-            transparent 65%
+        linear-gradient(
+            135deg,
+            rgba(25,25,25,0.95),
+            rgba(8,8,8,0.97)
         );
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,0.55),
+        inset 0 0 50px rgba(0,0,0,0.35);
+
+    line-height: 1.9;
+
+    font-size: 16px;
+
+    animation:
+        storyAppear 0.8s ease;
+
 }
 
 
-.story-box::after {
-    content: "";
+.story p {
 
-    position: absolute;
+    margin:
+        0 0 18px;
 
-    left: 0;
+}
 
-    right: 0;
 
-    top: 0;
+.story strong {
 
-    height: 1px;
+    color: #eee;
+
+}
+
+
+.story em {
+
+    color: #888;
+
+}
+
+
+/* =================================
+   CHOICES
+================================= */
+
+.choices {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-top: 20px;
+
+}
+
+
+.choices button {
+
+    width: 100%;
+
+    padding:
+        16px 20px;
+
+    border:
+        1px solid #292929;
 
     background:
         linear-gradient(
             90deg,
-            transparent,
-            rgba(130, 0, 0, 0.35),
-            transparent
+            rgba(18,18,18,0.95),
+            rgba(10,10,10,0.95)
         );
+
+    color: #aaa;
+
+    text-align: left;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 14px;
+
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    transition:
+        all 0.3s ease;
+
+}
+
+
+.choices button:hover {
+
+    padding-left: 28px;
+
+    border-color:
+        #650000;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(60,0,0,0.4),
+            rgba(15,15,15,0.95)
+        );
+
+    color: #eee;
+
+    box-shadow:
+        0 0 18px rgba(100,0,0,0.12);
+
+}
+
+
+.choices button:active {
+
+    transform:
+        scale(0.99);
+
+}
+
+
+/* =================================
+   INVENTORY
+================================= */
+
+.inventory {
+
+    margin-top: 25px;
+
+    padding:
+        15px 18px;
+
+    border-top:
+        1px solid #202020;
+
+    color: #555;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+}
+
+
+.inventory span {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #444;
+
+}
+
+
+#inventory {
+
+    color: #777;
+
+    font-size: 11px;
+
+    letter-spacing: 1px;
+
+}
+
+
+/* =================================
+   FOOTER
+================================= */
+
+.game-footer {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 40px;
+
+    padding-top: 15px;
+
+    border-top:
+        1px solid #151515;
+
+    color: #333;
+
+    font-size: 8px;
+
+    letter-spacing: 3px;
+
+}
+
+
+/* =================================
+   DEATH / ENDINGS
+================================= */
+
+.death {
+
+    margin:
+        20px 0 30px;
+
+    color: #8b0000;
+
+    font-size:
+        clamp(28px, 7vw, 55px);
+
+    letter-spacing: 8px;
+
+    text-align: center;
+
+    text-shadow:
+        0 0 25px rgba(139,0,0,0.25);
+
+    animation:
+        deathPulse 2s infinite;
+
+}
+
+
+/* =================================
+   INSANITY
+================================= */
+
+body.insane {
+
+    animation:
+        bodyShake 0.15s infinite;
+
+}
+
+
+body.insane::before {
+
+    background:
+        radial-gradient(
+            circle at center,
+            transparent 10%,
+            rgba(90,0,0,0.08) 45%,
+            rgba(90,0,0,0.35) 100%
+        );
+
+}
+
+
+body.insane .story {
+
+    box-shadow:
+        0 0 35px rgba(100,0,0,0.2),
+        inset 0 0 40px rgba(100,0,0,0.1);
+
+}
+
+
+body.insane .game-header h1 {
+
+    animation:
+        titleFlicker 0.8s infinite;
+
+}
+
+
+/* =================================
+   FLASHLIGHT EFFECTS
+================================= */
+
+body.flashlight-warning .story {
+
+    box-shadow:
+        0 0 30px rgba(160,120,0,0.08);
+
+}
+
+
+body.flashlight-critical .story {
+
+    box-shadow:
+        0 0 40px rgba(120,0,0,0.12);
+
+    animation:
+        flashlightFlicker 3s infinite;
+
+}
+
+
+body.flashlight-dead .story {
+
+    background:
+        #030303;
+
+    color: #555;
+
+}
+
+
+/* =================================
+   HEALTH CRITICAL
+================================= */
+
+body.health-critical .hud {
+
+    animation:
+        dangerPulse 1.5s infinite;
+
+}
+
+
+/* =================================
+   ANIMATIONS
+================================= */
+
+@keyframes titleFadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+
+@keyframes gameFadeIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
 }
 
 
@@ -419,253 +777,117 @@ h1 {
 
     from {
         opacity: 0;
-
-        transform:
-            translateY(5px);
+        transform: translateY(8px);
     }
 
     to {
         opacity: 1;
-
-        transform:
-            translateY(0);
+        transform: translateY(0);
     }
 
 }
 
 
-#story {
-    width: 100%;
+@keyframes titlePulse {
 
-    position: relative;
-
-    z-index: 2;
-
-    font-size: 19px;
-
-    line-height: 1.8;
-
-    color: #dedede;
-
-    text-shadow:
-        0 1px 2px #000;
-
-    animation:
-        textAppear 0.6s ease;
-}
-
-
-@keyframes textAppear {
-
-    from {
-        opacity: 0;
+    0%,
+    100% {
+        opacity: 0.85;
     }
 
-    to {
+    50% {
         opacity: 1;
     }
 
 }
 
 
-#story p {
-    margin:
-        0 0 18px;
+@keyframes warningFlicker {
+
+    0%,
+    94%,
+    100% {
+        opacity: 0.55;
+    }
+
+    95% {
+        opacity: 0.1;
+    }
+
+    96% {
+        opacity: 0.8;
+    }
+
 }
 
 
-#story p:last-child {
-    margin-bottom: 0;
+@keyframes titleFlicker {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    45% {
+        opacity: 0.65;
+    }
+
+    47% {
+        opacity: 1;
+    }
+
+    70% {
+        opacity: 0.8;
+    }
+
 }
 
 
-#story strong {
-    color: #f0f0f0;
-}
+@keyframes flashlightFlicker {
 
+    0%,
+    100% {
+        opacity: 1;
+    }
 
-#story em {
-    color: #b9b9b9;
+    92% {
+        opacity: 1;
+    }
 
-    text-shadow:
-        0 0 8px rgba(255,255,255,0.08);
-}
+    93% {
+        opacity: 0.75;
+    }
 
+    94% {
+        opacity: 0.95;
+    }
 
-/* =========================================================
-   CHOICES
-   ========================================================= */
+    96% {
+        opacity: 0.55;
+    }
 
-#choices {
-    margin-top: 25px;
-}
+    97% {
+        opacity: 1;
+    }
 
-
-button {
-    display: block;
-
-    width: 100%;
-
-    padding: 18px 20px;
-
-    margin: 14px 0;
-
-    background:
-        linear-gradient(
-            100deg,
-            #111111,
-            #0b0b0b
-        );
-
-    color: #ddd;
-
-    border: 1px solid #3a3a3a;
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-    font-size: 17px;
-
-    text-align: left;
-
-    cursor: pointer;
-
-    position: relative;
-
-    overflow: hidden;
-
-    transition:
-        background 0.25s ease,
-        border-color 0.25s ease,
-        transform 0.25s ease,
-        color 0.25s ease;
-}
-
-
-button::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-
-    left: -100%;
-
-    width: 100%;
-
-    height: 100%;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,0.04),
-            transparent
-        );
-
-    transition:
-        left 0.5s ease;
-}
-
-
-button:hover {
-    background:
-        linear-gradient(
-            100deg,
-            #260000,
-            #120000
-        );
-
-    border-color: #760000;
-
-    color: #f1f1f1;
-
-    transform:
-        translateX(5px);
-}
-
-
-button:hover::before {
-    left: 100%;
-}
-
-
-button:active {
-    transform:
-        translateX(2px);
-}
-
-
-/* =========================================================
-   INVENTORY
-   ========================================================= */
-
-.inventory {
-    margin-top: 25px;
-
-    padding: 15px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #0c0c0c,
-            #070707
-        );
-
-    border: 1px solid #222;
-
-    text-align: left;
-
-    box-shadow:
-        inset 0 0 20px rgba(0,0,0,0.35);
-}
-
-
-.inventory-title {
-    color: #666;
-
-    font-size: 10px;
-
-    letter-spacing: 3px;
-
-    margin-bottom: 8px;
-}
-
-
-#inventory {
-    color: #aaa;
-
-    font-size: 14px;
-
-    transition:
-        color 0.3s ease;
-}
-
-
-/* =========================================================
-   DEATH SCREEN
-   ========================================================= */
-
-.death {
-    color: #b00000;
-
-    font-size: 28px;
-
-    letter-spacing: 5px;
-
-    font-weight: bold;
-
-    text-shadow:
-        0 0 12px rgba(150,0,0,0.4);
-
-    animation:
-        deathPulse 2s infinite;
 }
 
 
 @keyframes deathPulse {
+
+    0%,
+    100% {
+        opacity: 0.75;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+}
+
+
+@keyframes dangerPulse {
 
     0%,
     100% {
@@ -679,332 +901,133 @@ button:active {
 }
 
 
-/* =========================================================
-   LOW SANITY
-   ========================================================= */
-
-body.insane {
-    animation:
-        sanityShake 0.18s infinite;
-}
-
-
-body.insane::before {
-    background:
-        radial-gradient(
-            ellipse at center,
-            transparent 15%,
-            rgba(70, 0, 0, 0.15) 55%,
-            rgba(0, 0, 0, 0.85) 100%
-        );
-
-    opacity: 1;
-}
-
-
-body.insane .story-box {
-    border-color: #600000;
-
-    box-shadow:
-        0 0 30px rgba(120, 0, 0, 0.5),
-        0 0 80px rgba(120, 0, 0, 0.2),
-        inset 0 0 30px rgba(80, 0, 0, 0.15);
-}
-
-
-body.insane h1 {
-    animation:
-        sanityFlicker 1.2s infinite;
-}
-
-
-body.insane #story {
-    animation:
-        sanityText 2s infinite;
-}
-
-
-@keyframes sanityShake {
+@keyframes bodyShake {
 
     0% {
-        transform:
-            translate(0, 0);
+        transform: translate(0,0);
     }
 
     25% {
-        transform:
-            translate(-1px, 1px);
+        transform: translate(-1px,1px);
     }
 
     50% {
-        transform:
-            translate(1px, -1px);
+        transform: translate(1px,-1px);
     }
 
     75% {
-        transform:
-            translate(-1px, -1px);
+        transform: translate(-1px,-1px);
     }
 
     100% {
-        transform:
-            translate(0, 0);
+        transform: translate(0,0);
     }
 
 }
 
 
-@keyframes sanityFlicker {
+/* =================================
+   MOBILE / IPAD
+================================= */
 
-    0%,
-    100% {
-        opacity: 1;
-    }
+@media (max-width: 700px) {
 
-    45% {
-        opacity: 0.5;
-    }
+    .game-container {
 
-    50% {
-        opacity: 0.9;
-    }
+        width: 94%;
 
-    52% {
-        opacity: 0.3;
-    }
+        padding-top: 30px;
 
-    55% {
-        opacity: 1;
-    }
-
-}
-
-
-@keyframes sanityText {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.75;
-    }
-
-}
-
-
-/* =========================================================
-   FLASHLIGHT WARNING
-   ========================================================= */
-
-body.flashlight-warning .story-box {
-    animation:
-        flashlightWarning 2s infinite;
-}
-
-
-body.flashlight-critical .story-box {
-    animation:
-        flashlightCritical 0.8s infinite;
-}
-
-
-body.flashlight-dead {
-    background:
-        radial-gradient(
-            circle at center,
-            #050505 0%,
-            #010101 45%,
-            #000000 100%
-        );
-}
-
-
-body.flashlight-dead .story-box {
-    border-color: #181818;
-
-    box-shadow:
-        0 0 20px rgba(0, 0, 0, 0.95);
-}
-
-
-body.flashlight-dead h1 {
-    color: #650000;
-
-    text-shadow: none;
-}
-
-
-@keyframes flashlightWarning {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    48% {
-        opacity: 0.95;
-    }
-
-    50% {
-        opacity: 0.75;
-    }
-
-    52% {
-        opacity: 1;
-    }
-
-}
-
-
-@keyframes flashlightCritical {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    20% {
-        opacity: 0.7;
-    }
-
-    22% {
-        opacity: 1;
-    }
-
-    45% {
-        opacity: 0.4;
-    }
-
-    47% {
-        opacity: 0.9;
-    }
-
-    70% {
-        opacity: 0.6;
-    }
-
-    72% {
-        opacity: 1;
-    }
-
-}
-
-
-/* =========================================================
-   HEALTH WARNING
-   ========================================================= */
-
-body.health-critical .story-box {
-    border-color: #500000;
-
-    animation:
-        healthPulse 1.2s infinite;
-}
-
-
-@keyframes healthPulse {
-
-    0%,
-    100% {
-        box-shadow:
-            0 0 40px rgba(0,0,0,0.8);
-    }
-
-    50% {
-        box-shadow:
-            0 0 40px rgba(100,0,0,0.35);
-    }
-
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 600px) {
-
-    body {
-        padding: 15px;
-    }
-
-
-    .game {
-        max-width: 100%;
-    }
-
-
-    .chapter {
-        font-size: 9px;
-
-        letter-spacing: 4px;
-    }
-
-
-    h1 {
-        font-size: 32px;
-
-        letter-spacing: 7px;
-
-        margin-bottom: 25px;
     }
 
 
     .hud {
+
         grid-template-columns:
             repeat(2, 1fr);
 
-        gap: 8px;
     }
 
 
-    .stat {
-        padding: 10px 6px;
+    .story {
+
+        padding:
+            27px 22px;
+
+        font-size: 15px;
+
+        line-height: 1.8;
+
     }
 
 
-    .stat span {
-        font-size: 17px;
-    }
+    .title-content {
 
-
-    .stat small {
-        font-size: 8px;
-    }
-
-
-    .stat strong {
-        font-size: 14px;
-    }
-
-
-    .story-box {
         padding: 25px;
 
-        min-height: 300px;
     }
 
 
-    #story {
-        font-size: 17px;
+    .title-screen h1 {
 
-        line-height: 1.7;
+        letter-spacing: 7px;
+
     }
 
 
-    button {
-        font-size: 16px;
+    .title-subtitle {
 
-        padding: 17px;
+        letter-spacing: 5px;
+
     }
 
 
-    .death {
-        font-size: 23px;
+    .start-button {
 
-        letter-spacing: 3px;
+        margin-top: 40px;
+
+    }
+
+
+    .game-footer {
+
+        font-size: 7px;
+
+        letter-spacing: 2px;
+
+    }
+
+}
+
+
+/* =================================
+   SMALL PHONES
+================================= */
+
+@media (max-width: 420px) {
+
+    .story {
+
+        padding:
+            24px 18px;
+
+    }
+
+
+    .choices button {
+
+        padding:
+            15px 16px;
+
+    }
+
+
+    .title-screen h1 {
+
+        font-size: 48px;
+
+        letter-spacing: 5px;
+
     }
 
 }
